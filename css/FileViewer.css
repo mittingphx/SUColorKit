@@ -70,6 +70,7 @@ body {
     padding: 0;
 }
 
+/*noinspection CssInvalidPropertyValue*/
 .folders-view ul li, .files-view ul li {
     padding: 5px 0;
     text-wrap: nowrap;

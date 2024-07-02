@@ -48,7 +48,7 @@ export class PixelMath {
 
         // return boolean of whether object is updated in object mode
         if (object) {
-            if (r != object.r || g != object.g || b != object.b) {
+            if (r !== object.r || g !== object.g || b !== object.b) {
                 object.red = r;
                 object.green = g;
                 object.blue = b;
@@ -68,7 +68,7 @@ export class PixelMath {
      * @param {number} [h.sat] - The saturation value of the color.
      * @param {number} [h.val] - The value (brightness) value of the color.
      * @param s {number}
-     * @param v {numer}
+     * @param v {number}
      * @returns {number[]|boolean} - returns array of 3 numbers if numbers are passed in, otherwise true if the object is clamped or false if not     */
     static clampHSV(h, s, v) {
 
@@ -107,7 +107,7 @@ export class PixelMath {
 
         // return boolean of whether object is updated in object mode
         if (object) {
-            if (h != object.hue || s != object.sat || v != object.val) {
+            if (h !== object.hue || s !== object.sat || v !== object.val) {
                 object.hue = h;
                 object.sat = s;
                 object.val = v;
