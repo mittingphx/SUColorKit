@@ -1,0 +1,66 @@
+[
+  {
+    "name": "Block",
+    "color": "#000000"
+  },
+  {
+    "name": "Blue",
+    "color": "#0000AA"
+  },
+  {
+    "name": "Green",
+    "color": "#00AA00"
+  },
+  {
+    "name": "Cyan",
+    "color": "#00AAAA"
+  },
+  {
+    "name": "Red",
+    "color": "#AA0000"
+  },
+  {
+    "name": "Purple",
+    "color": "#AA00AA"
+  },
+  {
+    "name": "Brown",
+    "color": "#AA5500"
+  },
+  {
+    "name": "Light Grey",
+    "color": "#AAAAAA"
+  },
+  {
+    "name": "Dark Grey",
+    "color": "#555555"
+  },
+  {
+    "name": "Light Blue",
+    "color": "#5555FF"
+  },
+  {
+    "name": "Light Green",
+    "color": "#55FF55"
+  },
+  {
+    "name": "Light Cyan",
+    "color": "#55FFFF"
+  },
+  {
+    "name": "Pink",
+    "color": "#FF5555"
+  },
+  {
+    "name": "Lavender",
+    "color": "#FF55FF"
+  },
+  {
+    "name": "Yellow",
+    "color": "#FFFF55"
+  },
+  {
+    "name": "White",
+    "color": "#FFFFFF"
+  }
+]

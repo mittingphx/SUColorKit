@@ -1,0 +1,66 @@
+[
+  {
+    "name": "White",
+    "color": "#000000"
+  },
+  {
+    "name": "Grey #1",
+    "color": "#DDDDDD"
+  },
+  {
+    "name": "Grey #2",
+    "color": "#BBBBBB"
+  },
+  {
+    "name": "Grey #3",
+    "color": "#999999"
+  },
+  {
+    "name": "Grey #4",
+    "color": "#777777"
+  },
+  {
+    "name": "Grey #5",
+    "color": "#555555"
+  },
+  {
+    "name": "Grey #6",
+    "color": "#333333"
+  },
+  {
+    "name": "Black",
+    "color": "#000000"
+  },
+  {
+    "name": "Dark Blue",
+    "color": "#004499"
+  },
+  {
+    "name": "Yellow",
+    "color": "#EEEE00"
+  },
+  {
+    "name": "Green",
+    "color": "#00CC00"
+  },
+  {
+    "name": "Red",
+    "color": "#DD0000"
+  },
+  {
+    "name": "Beige",
+    "color": "#EEEEBB"
+  },
+  {
+    "name": "Dark Green",
+    "color": "#558800"
+  },
+  {
+    "name": "Gold/Orange",
+    "color": "#FFBB00"
+  },
+  {
+    "name": "Light Blue",
+    "color": "#00BBFF"
+  }
+]

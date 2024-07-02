@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Black",
+    "color": "#000000"
+  },
+  {
+    "name": "Dark Red",
+    "color": "#800000"
+  },
+  {
+    "name": "Dark Green",
+    "color": "#008000"
+  },
+  {
+    "name": "Dark Yellow",
+    "color": "#808000"
+  },
+  {
+    "name": "Dark Blue",
+    "color": "#000080"
+  },
+  {
+    "name": "Dark Magenta",
+    "color": "#800080"
+  },
+  {
+    "name": "Dark Cyan",
+    "color": "#008080"
+  },
+  {
+    "name": "Light Gray",
+    "color": "#C0C0C0"
+  },
+  {
+    "name": "Money Green",
+    "color": "#C0DCC0"
+  },
+  {
+    "name": "Sky Blue",
+    "color": "#A6CAF0"
+  },
+  {
+    "name": "Cream",
+    "color": "#FFFBF0"
+  },
+  {
+    "name": "Medium Grey",
+    "color": "#A0A0A4"
+  },
+  {
+    "name": "Dark Grey",
+    "color": "#808080"
+  },
+  {
+    "name": "Red",
+    "color": "#FF0000"
+  },
+  {
+    "name": "Green",
+    "color": "#00FF00"
+  },
+  {
+    "name": "Yellow",
+    "color": "#FFFF00"
+  },
+  {
+    "name": "Blue",
+    "color": "#0000FF"
+  },
+  {
+    "name": "Magenta",
+    "color": "#FF00FF"
+  },
+  {
+    "name": "Cyan",
+    "color": "#00FFFF"
+  },
+  {
+    "name": "White",
+    "color": "#FFFFFF"
+  }
+]

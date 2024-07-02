@@ -1,0 +1,190 @@
+
+body {
+    margin: 0;
+    background: #d0d0d0;
+    overflow: hidden;
+    font: 10pt sans-serif;
+}
+
+.heading {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+}
+
+.heading span {
+    background: #999988;
+    color: black;
+    border-radius: 5px;
+    padding: 3px;
+    cursor: default;
+}
+
+.heading button {
+    float: right;
+    background: #999988;
+    color: black;
+    border-radius: 5px;
+
+    padding: 3px;
+    margin-top: -5px;
+}
+
+.heading button:hover {
+    background: #aaa;
+    cursor: pointer;
+}
+
+.folders-view {
+    width: 150px;
+    height: 380px;
+    float: left;
+    background: white;
+    border-right: 1px solid #aaa;
+}
+
+.files-view {
+    background: white;
+    width: 200px;
+    height: 380px;
+    float:left;
+    border-left: 1px solid #333;
+    border-right: 1px solid #aaa;
+    overflow: auto;
+}
+
+.file-view {
+    width: 380px;
+    height: 380px;
+    float:left;
+    border-left: 1px solid #333;
+    overflow: hidden;
+}
+
+.folders-view, .files-view, .file-view {
+    padding: 10px;
+}
+
+.folders-view ul, .files-view ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.folders-view ul li, .files-view ul li {
+    padding: 5px 0;
+    text-wrap: nowrap;
+}
+
+.folders-view ul li i, .files-view ul li i {
+    margin-right: 5px;
+    margin-left: 10px;
+}
+
+.folders-view ul li a, .files-view ul li a {
+    color: black;
+    text-decoration: none;
+}
+
+/** sub-folders allows the deepest folder to be treated like a category instead of as a folder */
+.files-view li.subfolder {
+    color: #aaa;
+    cursor: default !important;
+}
+
+.files-view li.subfolder:hover {
+    background:none;
+}
+
+/** hover and selected **/
+.folders-view ul li:hover, .files-view ul li:hover {
+    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
+    background: #4477ee;
+    overflow: auto;
+}
+
+
+
+
+.folders-view ul li:hover a, .files-view ul li:hover a {
+    color: white;
+}
+
+.folders-view ul li.selected, .files-view ul li.selected {
+    font-weight: bold;
+    border-radius: 5px;
+    background: #778499;
+    color: black;
+    overflow: auto;
+}
+
+.folders-view ul li.selected a, .files-view ul li.selected a {
+    font-weight: bold;
+}
+
+
+.file-upload {
+    display: none;
+}
+
+/** properties */
+.file-view-property {
+    margin-bottom: 5px;
+    border-bottom: 1px dotted #aaa;
+    padding-bottom: 5px;
+}
+
+.file-view-property label {
+    width: 75px;
+    display: inline-block;
+}
+.file-view-property input, .file-view-property select {
+    margin-left: 5px;
+    border-radius: 5px;
+    padding: 3px;
+    border: 1px solid grey;
+}
+.file-view-property input {
+    width: 242px;
+}
+.file-view-property select {
+    width: 250px;
+}
+.file-view-buttons {
+    border-bottom: none;
+}
+.file-view-property button {
+    border-radius: 3px;
+    border: 1px solid grey;
+    padding: 3px;
+    margin-left: 5px;
+    background: #999988;
+    color: black;
+}
+
+.file-view-property button:hover {
+    background: #aaa;
+    cursor: pointer;
+}
+
+.file-view-contents {
+    overflow: auto;
+    height: 215px;
+}
+
+/* empty view */
+.file-view-empty .file-view-property, .file-view-empty .file-view-contents{
+    display: none;
+}
+.empty-message {
+    display: none;
+}
+.file-view-empty .empty-message {
+    display: block;
+}
+
+/* readonly view */
+.file-view-readonly .file-view-buttons {
+    display: none;
+}

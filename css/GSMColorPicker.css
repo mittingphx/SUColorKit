@@ -1,0 +1,425 @@
+
+body {
+    background: #333;
+    font: 10pt sans-serif;
+}
+
+.panel {
+    width: 410px;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: #bbaa99;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+}
+
+/** PANEL HEADER **/
+.panel-header {
+    background: #333;
+    color: #fff;
+    font: bold 11pt serif;
+    padding: 5px;
+    border-radius: 10px 10px 0 0;
+    text-align: center;
+}
+
+.panel-header > .actions {
+    float: right;
+    color: white;
+    font-size: 1.1em;
+}
+
+.panel-header > .actions > i {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.panel-header > .actions > i:hover {
+    cursor: pointer;
+    color: yellow;
+}
+
+
+/** PANEL TABS **/
+.panel-tabs {
+    background: #918477;
+    padding: 3px 5px 0 0;
+    overflow: hidden;
+}
+
+.panel-tab {
+    display: inline-block;
+    padding: 4px;
+    font: bold 11px sans-serif;
+    border-radius: 5px 5px 0 0;
+    margin: 0 0 0 3px;
+    border: 1px solid rgba(0,0,0,0.4);
+    border-bottom-style: none;
+    box-shadow: 0px 0 2px rgba(0,0,0,0.5);
+
+    background: #bf9b78;
+}
+
+.panel-tab.right {
+    float: right;
+}
+
+.panel-tab:hover {
+    cursor: pointer;
+    background: #ddd;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.5);
+}
+
+.panel-tab.active {
+    background: #bbaa99;
+    box-shadow: 2px 0 4px rgba(0,0,0,0.5);
+    cursor: default;
+}
+
+
+/** TAB VIEW CONTENTS **/
+
+.panel-tab-view {
+    display: none;
+    padding: 5px;
+    /*height: 190px;*/
+    height: 280px;
+}
+
+.panel-tab-view.active {
+    display: block;
+}
+
+
+/** common to all tab views **/
+
+.panel-section {
+    padding: 10px;
+    display: inline-block;
+}
+
+.panel-section label {
+    font: bold 11px sans-serif;
+}
+
+.panel-color {
+    float: left;
+    width: 100px;
+    height: 100px;
+    background-color: #000;
+    border: 1px solid rgba(0,0,0,0.7);
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+    margin: 10px 30px;
+}
+
+.panel-color-overlay {
+    background-image: url('../images/color-picker-logo-small.png');
+    background-size: contain;
+}
+
+/* bottom controls */
+
+.panel-sub-section {
+    padding: 10px;
+    display: inline-block;
+    width: 45%;
+    float: left;
+}
+
+.panel-sub-section input[type="range"] {
+    width: 100px;
+}
+.panel-sub-section input[type="number"] {
+    width: 42px;
+}
+
+
+/** sliders view **/
+
+.hex {
+    clear: left;
+    float: left;
+    padding: 0;
+    margin-left: 15px;
+    text-align: center;
+}
+
+.hex button {
+    font: 10px sans-serif;
+    margin: 0 !important;
+}
+
+.hex > #hexButton {
+    height: 20px;
+}
+
+.hex > #showImage {
+    width: 0.8em;
+    position: relative;
+    top: 3px;
+}
+.hex > #showImage + label {
+    font: 10px sans-serif;
+}
+
+.panel-section button {
+    margin: 0 15px;
+}
+
+.clear {
+    clear: both;
+}
+
+.rgb label, .hsv label {
+    position: relative;
+    top: -4px;
+}
+
+
+
+/** gradient view **/
+
+.panel-palette {
+}
+
+.panel-choose-palette {
+    padding:0;
+    margin-left: 32px;
+}
+
+.panel-choose-palette select {
+    width: 150px;
+}
+
+.hex > #gradient_showImage {
+    width: 0.8em;
+    position: relative;
+    top: 3px;
+}
+.hex > #gradient_showImage + label {
+    font: 10px sans-serif;
+}
+
+/** photos view **/
+
+#tab-photos-view .panel-palette {
+
+    position: absolute;
+    width: 400px;
+    height: 275px;
+    left: 5px;
+    top: 60px;
+
+}
+
+#tab-photos-view .panel-palette canvas {
+    width: 400px;
+    height: 275px;
+}
+
+#tab-photos-view .panel-choose-palette {
+    z-index: 25;
+}
+
+#tab-photos-view .panel-color-bg {
+    position: absolute;
+    width: 150px;
+    height: 160px;
+    top: auto;
+    left: auto;
+    margin-left: 5px;
+    margin-top: 5px;
+
+    z-index: 5;
+}
+
+#tab-photos-view .panel-color-selector {
+    position: absolute;
+    top: auto; left: auto;
+    width: 150px;
+    height: 160px;
+    margin-left: 0;
+    margin-top: 2px;
+    border-radius: 10px;
+    z-index: 35;
+}
+
+#tab-photos-view .panel-blur {
+    backdrop-filter: blur(2px);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.7);
+}
+
+#tab-photos-view .panel-choose-palette {
+    position: absolute;
+    left: 50px;
+    width: 300px;
+    top: 305px;
+    z-index: 35;
+    padding: 5px;
+    margin: 0;
+}
+
+#tab-photos-view .panel-choose-palette select {
+    width: 250px;
+}
+
+
+/** settings view **/
+
+#tab-settings-view {
+    font: 11px sans-serif;
+}
+#tab-settings-view h2 {
+    margin: 0;
+    padding: 0;
+    font-size: 1.8em;
+    color: #333;
+}
+#tab-settings-view p {
+    margin: 0;
+    padding: 0;
+    font-size: 1.2em;
+}
+
+/** named color list **/
+
+#named-list {
+    width: 150px;
+}
+
+#named-list + label {
+    margin-right: 5px;
+}
+
+div.list-container {
+    height: 265px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+table.list-table {
+    width: 230px;
+}
+
+tr.list-colors {
+    margin: 5px;
+    background: rgba(0,0,0,0.1);
+}
+
+tr.list-colors:hover {
+    cursor: pointer;
+    background: rgba(244,236,194,0.4);
+}
+
+tr.list-colors.selected {
+    background: rgba(244,236,194,0.8);
+}
+
+td.list-color {
+    font: 12pt sans-serif;
+}
+
+.list-color-preview {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #000;
+    float: left;
+    margin: 5px;
+}
+
+.list-color-name {
+    float: left;
+    margin: 8px 0;
+    font: bold 11pt sans-serif;
+    color: #000;
+}
+
+.list-color-string {
+    float: right;
+    margin: 13px 0 0 0;
+    font: 6pt monospace;
+    color: #000;
+    width: 50px;
+    text-align: left;
+}
+
+
+.hex > #list_showImage {
+    width: 0.8em;
+    position: relative;
+    top: 3px;
+}
+.hex > #list_showImage + label {
+    font: 10px sans-serif;
+}
+
+
+.title h2 {
+    font: bold 1.5em Georgia, serif;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+.title h3 {
+    font: bold 1em sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.title h4 {
+    font: 0.8em sans-serif;
+    color: #555;
+    margin: 0;
+    padding: 0;
+}
+
+.settings-panel {
+    border: 1px solid #333;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+    background: #bbaa99;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.5);
+    position:  relative;
+}
+
+.settings-panel h1 {
+    font: bold 12pt sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.settings-panel .settings-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 5px;
+    width: 200px;
+    text-align: left;
+}
+
+.settings-panel .settings-count span {
+    font-size: 2em;
+    font-weight: bold;
+    color: yellow;
+    text-shadow: 1px 2px 3px rgba(0,0,0,0.5);
+}
+
+.settings-panel .desc {
+    font: 1em sans-serif !important;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    text-align: justify;
+}
+
+.settings-panel button {
+    font: 9pt sans-serif;
+    float: right;
+    margin: 5px 0 0 20px;
+}

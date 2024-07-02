@@ -1,0 +1,21 @@
+{
+  "manifest_version": 3,
+  "name": "GSM Color Converter",
+  "description": "Converts color values between RGB, HSV, and Hex",
+  "version": "1.0",
+  "permissions": ["contextMenus", "sidePanel", "storage"],
+  "action": {
+    "default_popup": "colors.html",
+    "default_icon": "images/color-picker-logo-small.png"
+  },
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "side_panel": {
+    "default_path": "colors.html"
+  },
+  "web_accessible_resources": [{
+    "resources": [ "images/*.png", "images/*.jpeg", "files.html" ],
+    "matches": [ "https://localhost/*" ]
+  }]
+}

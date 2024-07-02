@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Converter - File System</title>
+    <link rel="stylesheet" type="text/css" href="assets/css/LineIcons.3.0.css"/>
+    <link rel="stylesheet" type="text/css" href="css/FileViewer.css"/>
+</head>
+<body>
+    <div class="heading">
+        <button class="delete-button">
+            <i class="lni lni-remove-file"></i>
+            Delete
+        </button>
+        <button class="add-button">
+            <i class="lni lni-add-files"></i>
+            Add
+        </button>
+        &nbsp;&nbsp;
+        <button class="reset-button" style="margin-right: 10px">
+            <i class="lni lni-reload"></i>
+            Factory Reset
+        </button>
+        <span>
+            <i class="lni lni-layers"></i>
+            <b>Color Picker Files</b>
+        </span>
+    </div>
+    <div class="folders-view"></div>
+    <div class="files-view"></div>
+    <div class="file-view file-view-empty">
+        <div class="empty-message">
+            No file selected
+        </div>
+        <div class="file-view-property">
+            <label for="txtFilename">File Name:</label>
+            <input type="text" id="txtFilename" value="">
+        </div>
+        <div class="file-view-property">
+            <label for="ddlCategory">Category:</label>
+            <select id="ddlCategory"><option>Uncategorized</option></select>
+        </div>
+        <div class="file-view-property file-view-buttons">
+            <button id="btnSave" class="save-button"><i class="lni lni-save"></i> Save</button>
+            <button id="btnCancel" class="cancel-button"><i class="lni lni-close"></i> Cancel</button>
+        </div>
+        <div class="file-view-contents"></div>
+    </div>
+    <div class="file-upload">
+        <input type="file" accept="*/*" id="fileUpload" multiple />
+    </div>
+
+    <script type="module" src="js/FileViewer.js"></script>
+</body>
+</html>

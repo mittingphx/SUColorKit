@@ -1,0 +1,311 @@
+<!--suppress CheckImageSize -->
+<html lang="en">
+<head>
+    <title>GSM Color Converter</title>
+    <link rel="stylesheet" type="text/css" href="css/GSMColorPicker.css">
+</head>
+<body>
+
+<div class="panel">
+
+    <!-- the title bar -->
+    <div class="panel-header">
+        Scott's Color Converter
+        <div class="actions">
+            <i class="fa fa-bars action-menu" aria-hidden="true"></i>
+            <i class="fa fa-times-circle action-close" aria-hidden="true"></i>
+        </div>
+    </div>
+
+    <!-- the tabs -->
+    <div class="panel-tabs">
+        <div class="panel-tab" id="tab-about">About</div>
+        <div class="panel-tab" id="tab-settings">Settings</div>
+        <!--<div class="panel-tab" id="tab-sliders" style="margin-left: 60px">Sliders</div>-->
+        <div class="panel-tab active" id="tab-gradient" style="margin-left: 70px">Gradients</div>
+        <div class="panel-tab" id="tab-list">Named Colors</div>
+        <div class="panel-tab" id="tab-photos">Photos</div>
+    </div>
+
+    <!-- the sliders view -->
+    <div class="panel-tab-view" id="tab-sliders-view">
+
+        <div class="panel-color"></div>
+
+        <div class="panel-section hex">
+            <label for="hexColor">Hex:</label>
+            <input type="text" id="hexColor" value="#000000" size="7">
+            <button id="hexButton">copy</button>
+            <br>
+            <input type="checkbox" id="showImage" class="overlay-check" checked>
+            <label for="showImage">show overlay</label>
+        </div>
+
+        <div class="panel-section rgb">
+            <label for="redSlider1">R:</label>
+            <input type="range" id="redSlider1" min="0" max="255" value="0">
+            <label for="red1"></label>
+            <input type="number" id="red1" min="0" max="255" value="0" size="3">
+            <br>
+
+            <label for="greenSlider1">G:</label>
+            <input type="range" id="greenSlider1" min="0" max="255" value="0">
+            <label for="green1"></label>
+            <input type="number" id="green1" min="0" max="255" value="0" size="3">
+            <br>
+
+            <label for="blueSlider1">B:</label>
+            <input type="range" id="blueSlider1" min="0" max="255" value="0">
+            <label for="blue1"></label>
+            <input type="number" id="blue1" min="0" max="255" value="0" size="3">
+        </div>
+
+        <div class="panel-section hsv">
+            <label for="hueSlider1">H:</label>
+            <input type="range" id="hueSlider1" min="0" max="360" value="0">
+            <label for="hue1"></label>
+            <input type="number" id="hue1" min="0" max="255" value="0" size="3">
+            <br>
+
+            <label for="satSlider1">S:</label>
+            <input type="range" id="satSlider1" min="0" max="100" value="0">
+            <label for="sat1"></label>
+            <input type="number" id="sat1" min="0" max="255" value="0" size="3">
+            <br>
+
+            <label for="valSlider1">V:</label>
+            <input type="range" id="valSlider1" min="0" max="100" value="0">
+            <label for="val1"></label>
+            <input type="number" id="val1" min="0" max="255" value="0" size="3">
+        </div>
+
+        <div class="clear"></div>
+    </div>
+
+    <!-- the gradient view -->
+    <div class="panel-tab-view active" id="tab-gradient-view">
+
+        <div class="panel-color"></div>
+
+        <div class="panel-section hex">
+            <label for="gradient_hexColor">Hex:</label>
+            <input type="text" id="gradient_hexColor" value="#000000" size="7">
+            <button id="gradient_hexButton">copy</button>
+            <br>
+            <input type="checkbox" class="overlay-check" id="gradient_showImage" checked>
+            <label for="gradient_showImage">show overlay</label>
+        </div>
+
+
+        <div class="panel-section panel-palette">
+            <canvas id="canvas" width="200" height="130"></canvas>
+        </div>
+        <div class="panel-section panel-choose-palette">
+            <label for="gradient-palette">Palette:</label>
+            <select id="gradient-palette">
+                <optgroup label="Gradients">
+                    <option value="sat/val">Sat/Val over Hue</option>
+                    <option value="hue/val">Hue/Val over Sat</option>
+                    <option value="hue/sat">Hue/Sat over Val</option>
+                    <option value="red">Green/Blue over Red</option>
+                    <option value="green">Red/Blue over Green</option>
+                    <option value="blue">Red/Green over Blue</option>
+                </optgroup>
+                <optgroup label="Classic Desktop Computers">
+                    <option value="photoshop-3">Photoshop&reg; 3.0</option>
+                    <option value="vga256">VGA 256 Color</option>
+                    <option value="win16">Windows 16 Color</option>
+                </optgroup>
+                <optgroup label="Video Game Consoles">
+                    <option value="2600">Atari 2600</option>
+                    <option value="nes">Nintendo</option>
+                    <option value="segasms">Sega Master System</option>
+                </optgroup>
+            </select>
+        </div>
+
+        <div class="panel-sub-section rgb">
+            <label for="redSlider2">R:</label>
+            <input type="range" id="redSlider2" min="0" max="255" value="0">
+            <label for="red2"></label>
+            <input type="number" id="red2" min="0" max="255" value="0" size="3">
+            <br>
+
+            <label for="greenSlider2">G:</label>
+            <input type="range" id="greenSlider2" min="0" max="255" value="0">
+            <label for="green2"></label>
+            <input type="number" id="green2" min="0" max="255" value="0" size="3">
+            <br>
+
+            <label for="blueSlider2">B:</label>
+            <input type="range" id="blueSlider2" min="0" max="255" value="0">
+            <label for="blue2"></label>
+            <input type="number" id="blue2" min="0" max="255" value="0" size="3">
+        </div>
+
+        <div class="panel-sub-section hsv">
+            <label for="hueSlider2">H:</label>
+            <input type="range" id="hueSlider2" min="0" max="360" value="0">
+            <label for="hue2"></label>
+            <input type="number" id="hue2" min="0" max="255" value="0" size="3">
+            <br>
+
+            <label for="satSlider2">S:</label>
+            <input type="range" id="satSlider2" min="0" max="100" value="0">
+            <label for="sat2"></label>
+            <input type="number" id="sat2" min="0" max="255" value="0" size="3">
+            <br>
+
+            <label for="valSlider2">V:</label>
+            <input type="range" id="valSlider2" min="0" max="100" value="0">
+            <label for="val2"></label>
+            <input type="number" id="val2" min="0" max="255" value="0" size="3">
+        </div>
+
+        <div class="clear"></div>
+    </div>
+
+    <!-- the named colors view -->
+    <div class="panel-tab-view" id="tab-list-view">
+
+        <div class="panel-color"></div>
+
+        <div class="panel-section hex">
+            <label for="list_hexColor">Hex:</label>
+            <input type="text" id="list_hexColor" value="#000000" size="7">
+            <button id="list_hexButton">copy</button>
+            <br>
+            <input type="checkbox" class="overlay-check" id="list_showImage" checked>
+            <label for="list_showImage">show overlay</label>
+        </div>
+
+
+        <div class="panel-section panel-choose-palette">
+            <label for="named-list">List:</label>
+            <select id="named-list">
+                <optgroup label="Modern">
+                    <option value="web">Web Colors</option>
+                    <option value="pantone">Pantone&reg;</option>
+                </optgroup>
+                <optgroup label="Classic Desktop Computers">
+                    <option value="win16">Windows 3.x and OS/2</option>
+                    <option value="win95">Windows 95/98/Me</option>
+                    <option value="mac">Macintosh</option>
+                    <option value="tandy">Tandy 1000 and PCjr</option>
+                    <option value="risc">Acorn Risc-OS</option>
+                </optgroup>
+            </select>
+        </div>
+        <div class="list-container"></div>
+        <div class="clear"></div>
+    </div>
+
+
+    <!-- the photos view -->
+    <div class="panel-tab-view active" id="tab-photos-view">
+        <div class="panel-section panel-palette">
+            <canvas id="photos_canvas" width="400" height="250"></canvas>
+        </div>
+
+        <div class="panel-color-bg panel-blur"></div>
+        <div class="panel-color-selector">
+            <div class="panel-color"></div>
+            <div class="panel-section hex">
+                <label for="photos_hexColor">Hex:</label>
+                <input type="text" id="photos_hexColor" value="#000000" size="7">
+                <button id="photos_hexButton">copy</button>
+                <br>
+                <input type="checkbox" class="overlay-check" id="photos_showImage" checked>
+                <label for="photos_showImage">show overlay</label>
+            </div>
+        </div>
+
+        <div class="panel-section panel-choose-palette panel-blur">
+            <label for="photos-palette">Photo:</label>
+            <select id="photos-palette"></select>
+        </div>
+
+
+        <div class="clear"></div>
+    </div>
+
+
+    <!-- the settings view -->
+    <div class="panel-tab-view" id="tab-settings-view">
+
+        <div class="settings-panel settings-named-colors">
+            <h1>Named Colors</h1>
+            <button id="manageNamedColors">Manage</button>
+            <p class="settings-count">
+                You have <span>---</span> named colors.
+            </p>
+            <p class="desc">
+                Sets of names and hex colors that appear
+                under the "Named Colors" tab under the "List" drop down.
+            </p>
+        </div>
+
+        <div class="settings-panel settings-custom-palettes">
+            <h1>Custom Palettes</h1>
+            <button id="managePaletteImages">Manage</button>
+            <p class="settings-count">
+                You have <span>---</span> custom palettes.
+            </p>
+            <p class="desc">
+                Images you can choose pixels from in the
+                gradient tab under the "palette" drop down.
+            </p>
+        </div>
+
+        <div class="settings-panel settings-overlay-images">
+            <h1>Overlay Images</h1>
+            <button id="manageOverlays">Manage</button>
+            <p class="settings-count">
+                You have <span>---</span> overlay image.
+            </p>
+            <img src="images/color-picker-logo.png" alt="logo" width="50" height="50"
+            style="float: left; margin: 0 10px 5px 0;">
+            <p class="desc">
+                Images that you can overlay against the
+                selected color to see if it clashes with
+                other colors.
+            </p>
+            <div class="clear"></div>
+        </div>
+    </div>
+
+    <!-- the about this software view -->
+    <div class="panel-tab-view" id="tab-about-view">
+
+        <table class="title">
+            <tr>
+               <td><img src="images/color-picker-logo.png" alt="logo" width="100" height="100"></td>
+                <td>
+                    <h2>Scott's Color Converter</h2>
+                    <h3>v0.9.2</h3>
+                    <h4>build 20240702</h4>
+                </td>
+            </tr>
+        </table>
+
+        <p>
+            Browser plugin for quickly choosing colors and converting
+            between rgb and hsv and hex.
+            Created by Scott Mitting in 2024 to save time at work
+            when needing to pick colors sometimes when I don't have
+            Photoshop open all day.
+        </p>
+        <ul>
+            <li>Pantone&reg; colors are from
+            <a href="https://github.com/Margaret2/pantone-colors">Pantone Color Palette</a> by Margaret</li>
+            <li>Web colors are from <a href="https://www.w3schools.com/colors/colors_names.asp">w3schools.com</a></li>
+            <li>Classic computer and console colors are from <a href="https://wikipedia.org/">wikipedia.org</a></li>
+            <li>Public domain photos provided by <a href="https://unsplash.com/">Unsplash</a></li>
+        </ul>
+    </div>
+</div>
+
+<script type="module" src="js/GSMColorPicker.js"></script>
+<script src="js/fontawesome.js"></script>
+</body>
+</html>
