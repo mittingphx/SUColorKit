@@ -10,6 +10,12 @@ import {GuiUtil} from "../util/GuiUtil.js";
 export class PhotoPicker {
 
     /**
+     * Size of the canvas to display photos.
+     * @type {{width: number, height: number}}
+     */
+    size = { width: 400, height: 275 };
+
+    /**
      * References to the application's main class
      * @type {GSMColorPicker|null}
      */
@@ -83,6 +89,30 @@ export class PhotoPicker {
     currentY = 0;
 
     /**
+     * How much to scroll the image
+     * @type {{x: number, y: number}}
+     */
+    #imageScroll = { x: 0, y: 0 };
+
+    /**
+     * The user's scaling of the image against the fill scale.
+     * @type {number}
+     */
+    #userScale = 1.0;
+
+    /**
+     * Current image being displayed
+     * @type {HTMLImageElement|null}
+     */
+    #image = null;
+
+    /**
+     * Last size the image was scaled to
+     * @type {{width: number, height: number}}
+     */
+    #imageScale = {width: 0, height: 0};
+
+    /**
      * Constructor
      * @param app {GSMColorPicker} - The application's main class.
      */
@@ -114,7 +144,7 @@ export class PhotoPicker {
         }
 
         // clear canvas
-        this.ctx.clearRect(0, 0, 200, 250);
+        this.ctx.clearRect(0, 0, this.size.width, this.size.height);
 
         // select and load image
         this.photo = photo;
@@ -210,8 +240,8 @@ export class PhotoPicker {
         this.overlayCanvas.style.position = 'absolute';
         this.overlayCanvas.style.zIndex = '20';
         this.overlayCtx = this.overlayCanvas.getContext('2d', {willReadFrequently: false});
-        this.overlayCanvas.width = 400;
-        this.overlayCanvas.height = 275;
+        this.overlayCanvas.width = this.size.width;
+        this.overlayCanvas.height = this.size.height;
         this.canvas.parentElement.prepend(this.overlayCanvas);
 
         // mouse down and drags performs color selections
@@ -227,6 +257,167 @@ export class PhotoPicker {
         this.overlayCanvas.addEventListener('mouseup', () => {
             this.mouseIsDown = false;
         });
+
+        // arrows move picture around
+        let keyDown = {
+            ArrowLeft: false,
+            ArrowRight: false,
+            ArrowUp: false,
+            ArrowDown: false,
+            PageUp: false,
+            PageDown: false
+        }
+        let keyInterval = null;
+        document.addEventListener('keydown', event => {
+            switch (event.key) {
+                case ' ':
+                    keyDown = { ArrowLeft: false, ArrowRight: false, ArrowUp: false, ArrowDown: false };
+                    if (keyInterval != null) {
+                        clearInterval(keyInterval);
+                        keyInterval = null;
+                    }
+                    this.#userScale = 1.0;
+                    this.#imageScroll = { x: 0, y: 0 };
+                    this.#renderImage();
+                    break;
+
+                case 'ArrowLeft':
+                case 'ArrowRight':
+                case 'ArrowUp':
+                case 'ArrowDown':
+                case 'PageUp':
+                case 'PageDown':
+
+                    // update key state
+                    event.preventDefault();
+                    keyDown[event.key] = true;
+
+                    // start moving picture when first arrow pressed
+                    if (keyInterval == null) {
+                        let firstTime = new Date().getTime();
+                        let lastTime = firstTime
+                        keyInterval = setInterval(() => {
+
+                            // get time delta
+                            let now = new Date().getTime();
+                            let diff = now - lastTime;
+                            let elapsed = now - firstTime;
+
+                            let pixelsPerSecond = 0.5;// * (elapsed / 1000);
+                            //console.log('pixelsPerSecond: ' + pixelsPerSecond);
+                            lastTime = now;
+
+                            // move image
+                            if (keyDown['ArrowLeft']) {
+                                this.#imageScroll.x -= diff * pixelsPerSecond;
+                            }
+                            if (keyDown['ArrowRight']) {
+                                this.#imageScroll.x += diff * pixelsPerSecond;
+                            }
+                            if (keyDown['ArrowUp']) {
+                                this.#imageScroll.y -= diff * pixelsPerSecond;
+                            }
+                            if (keyDown['ArrowDown']) {
+                                this.#imageScroll.y += diff * pixelsPerSecond;
+                            }
+
+                            // scale image
+                            if (keyDown['PageUp']) {
+                                this.#userScale *= 1.01;// * pixelsPerSecond;
+                            }
+                            if (keyDown['PageDown']) {
+                                this.#userScale /= 1.01;// * pixelsPerSecond;
+                            }
+                            if (this.#userScale < 0.5) {
+                                this.#userScale = 0.5;
+                            }
+                            if (this.#userScale > 5) {
+                                this.#userScale = 5;
+                            }
+
+                            // limit scrolling to having the image half-way off the screen
+                            let w = this.#imageScale.width;// / this.#userScale;
+                            let h = this.#imageScale.height;// / this.#userScale;
+                            let w0 = this.canvas.width;
+                            let h0 = this.canvas.height;
+                            let minX = -w / 2;
+                            let minY = -h + h0 / 2;
+                            let maxX = w / 2;
+                            let maxY = h / 2 - h0 / 2;
+
+                            //console.log('limits ' + minX + ' ' + minY + ' ' + maxX + ' ' + maxY);
+
+                            if (this.#imageScroll.x < minX) {
+                                this.#imageScroll.x = minX;
+                            }
+                            if (this.#imageScroll.y < minY) {
+                                this.#imageScroll.y = minY;
+                            }
+                            if (this.#imageScroll.x > maxX) {
+                                this.#imageScroll.x = maxX;
+                            }
+                            if (this.#imageScroll.y > maxY) {
+                                this.#imageScroll.y = maxY;
+                            }
+
+                            this.#imageScroll.x = Math.floor(this.#imageScroll.x);
+                            this.#imageScroll.y = Math.floor(this.#imageScroll.y);
+
+                            // render image
+                            this.#renderImage();
+                        });
+                    }
+                    break;
+            }
+        });
+        document.addEventListener('keyup', event => {
+            switch (event.key) {
+                case 'ArrowLeft':
+                case 'ArrowRight':
+                case 'ArrowUp':
+                case 'ArrowDown':
+                case 'PageUp':
+                case 'PageDown':
+
+                    // update key state
+                    event.preventDefault();
+                    keyDown[event.key] = false;
+
+                    // stop moving picture if all arrows released
+                    if (keyInterval != null) {
+                        let allKeysUp = true;
+                        for (let key in keyDown) {
+                            if (keyDown[key]) {
+                                allKeysUp = false;
+                                break;
+                            }
+                        }
+                        if (allKeysUp) {
+                            clearInterval(keyInterval);
+                            keyInterval = null;
+                        }
+                    }
+
+                    break;
+            }
+        });
+    }
+
+    /**
+     * Renders the current image including current scale and scroll.
+     */
+    #renderImage() {
+        let rect = {
+            x: this.#imageScroll.x * this.#userScale,
+            y: this.#imageScroll.y * this.#userScale,
+            width: this.#imageScale.width * this.#userScale,
+            height: this.#imageScale.height * this.#userScale
+        };
+        if (this.#image) {
+            //console.log('rendering at ' + rect.x + ',' + rect.y + ' ' + rect.width + 'x' + rect.height);
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.drawImage(this.#image, rect.x, rect.y, rect.width, rect.height);
+        }
     }
 
     /**
@@ -234,6 +425,7 @@ export class PhotoPicker {
      * @param imgUrl {string} - The url of the image to load
      */
     #loadImage(imgUrl) {
+        this.#imageScroll = { x: 0, y: 0 };
         if (this.photo.startsWith('file:')) {
             // image from localStorage
             let fileId = parseInt(this.photo.substring(5));
@@ -245,7 +437,10 @@ export class PhotoPicker {
                 const img = new Image();
                 img.src = file.contents;
                 img.onload = () => {
-                    this.ctx.drawImage(img, 0, 0, 400, 275);
+                    let rect = GuiUtil.fillCentered(this.canvas, img);
+                    this.#imageScroll = { x: rect.x, y: rect.y };
+                    this.#imageScale = { width: rect.width, height: rect.height };
+                    this.#image = img;
                 };
             });
         }
@@ -254,7 +449,10 @@ export class PhotoPicker {
             const img = new Image();
             img.src = imgUrl;
             img.onload = () => {
-                this.ctx.drawImage(img, 0, 0, 400, 275);
+                let rect = GuiUtil.fillCentered(this.canvas, img);
+                this.#imageScroll = { x: rect.x, y: rect.y };
+                this.#imageScale = { width: rect.width, height: rect.height };
+                this.#image = img;
             };
         }
     }
@@ -316,7 +514,12 @@ export class PhotoPicker {
             //console.log(subfolder.files[j]);
             let file = fsFolder.files[j];
             let option = document.createElement('option');
-            option.value = file.localUrl;
+            if (file.isUserFile()) {
+                option.value = 'file:' + file.id;
+            }
+            else {
+                option.value = file.localUrl;
+            }
             option.innerHTML = file.name;
             optGroup.appendChild(option);
         }

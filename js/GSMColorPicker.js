@@ -108,6 +108,7 @@ export class GSMColorPicker {
         
         // initialize event listeners
         this.#initDomEvents();
+
     }
 
 

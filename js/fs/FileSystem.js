@@ -118,7 +118,7 @@ export class FileSystem {
         // use folder's name if passed as first argument
         if (typeof name !== "string") {
             if (name instanceof FileSystemFolder) {
-                return this.getFolder(name.name);
+                return this.getFolder(name.name, parent, createIfMissing);
             }
             else {
                 console.error('getFolder: name is not a string or FileSystemFolder');
@@ -137,7 +137,7 @@ export class FileSystem {
         for (let i = 0; i < parent.folders.length; i++) {
             if (parent.folders[i].name === parts[0]) {
                 if (parts.length > 1) {
-                    return this.getFolder(parts.slice(1).join('/'), parent.folders[i]);
+                    return this.getFolder(parts.slice(1).join('/'), parent.folders[i], createIfMissing);
                 }
                 return parent.folders[i];
             }
@@ -146,9 +146,15 @@ export class FileSystem {
         // recursively create the folder if requested
         if (createIfMissing) {
             let folder = new FileSystemFolder(parts[0]);
+            if (parent instanceof FileSystemFolder) {
+                folder.parent = parent;
+            }
+            else if (parent instanceof FileSystem) {
+                folder.parent = null;
+            }
             parent.folders.push(folder);
             if (parts.length > 1) {
-                return this.getFolder(parts.slice(1).join('/'), folder);
+                return this.getFolder(parts.slice(1).join('/'), folder, createIfMissing);
             }
             return folder;
         }
@@ -170,18 +176,25 @@ export class FileSystem {
      * Loads a file from localStorage by id directly
      * @param fileId {number} - The id of the file
      * @param callback {function} - The function to call when the file is loaded
+     * @returns {FileSystemFile|null} - The loaded file if immediately available (usually is)
      */
     static loadFileById(fileId, callback) {
         let item = localStorage.getItem('file_' + fileId);
         if (item === null) {
-            callback(null);
-            return;
+            if (typeof callback === 'function') {
+                callback(null);
+            }
+            return null;
         }
         let fileData = JSON.parse(item);
         let file = new FileSystemFile(fileData.name);
         file.id = fileId;
-        file.contents = fileData.data;
-        callback(file);
+        file.contents = fileData.contents;
+        file.folder = fileData.folder;
+        if (typeof callback === 'function') {
+            callback(file);
+        }
+        return file;
     }
 
     /**
@@ -292,6 +305,20 @@ export class FileSystem {
      * @param file {FileSystemFile}
      */
     getFolderForFile(file) {
+
+        // use folder path in file if available
+        if (file.folder) {
+            if (typeof file.folder === 'string') {
+                file.folder = this.getFolder(file.folder);
+            }
+            if (file.folder instanceof FileSystemFolder) {
+                return file.folder;
+            }
+            return null;
+        }
+
+        // TODO: we probably can delete this to optimize
+        // scan all folders for this file otherwise
         let folderList = this.getRecursiveFolders();
         for (let i = 0; i < folderList.length; i++) {
             if (folderList[i].containsFile(file)) {
@@ -336,31 +363,23 @@ export class FileSystem {
         this.#loadMetaData();
 
         for (let i = 1; i < this.#metadata.nextFileId; i++) {
-            let fileId = 'file_' + i;
 
             // check if file exists (won't if deleted)
-            let item = localStorage.getItem(fileId);
-            if (item === null) {
+            let file = FileSystem.loadFileById(i, null);
+            if (file === null) {
                 continue;
             }
 
-            // load into file object
-            let fileData = JSON.parse(item);
-            let file = new FileSystemFile(fileData.name);
-            file.id = i;
-            file.contents = fileData.data;
-
             // add to folder
-            let folder = this.getFolder(fileData.folder);
+            let folder = this.getFolder(file.folder, null, true);
             if (folder === null) {
-                console.error('could not find folder for user file ' + fileData.name);
+                console.error('could not find folder for user file ' + file.name);
                 // add to first folder (should never happen)
                 folder = this.folders[0];
             }
 
-            console.log('Loaded #' + file.id + ' named ' + file.name + ' from folder ' + fileData.folder);
+            console.log('Loaded #' + file.id + ' named ' + file.name + ' from folder ' + file.folder);
             folder.files.push(file);
-
         }
     }
 

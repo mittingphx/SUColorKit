@@ -508,7 +508,7 @@ export class FileSystemView {
     #buildFile() {
 
         // get the current file
-        let currentFile = this.#selectedFile;// this.getSelectedFile();
+        let currentFile = this.#selectedFile;
         if (currentFile === null) {
             this.$fileView.classList.add('file-view-empty');
             return;
