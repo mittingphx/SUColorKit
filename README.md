@@ -16,6 +16,22 @@ A variety of tools are available within the extension:
 * User ability to upload files to provide their own color palettes
 * Output as hex color (and other CSS color types coming soon)
 
+
+<br><br>
+
+<a href="https://buymeacoffee.com/scottmitting" target="_blank">Buy me a coffee.com</a>
+
+<a href="https://ko-fi.com/N4N2113HUS" target="_blank">
+     <img height="36" style="border:0;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" alt="Buy Me a Coffee at ko-fi.com">
+</a>
+
+I could really use a dollar or two.
+
+
+<br><br>
+
+
+
 ### Future Features
 
 These features are planned to be released soon:
