@@ -1,5 +1,5 @@
 import {PixelColor} from "../util/PixelColor.js";
-import {GSMColorPicker} from "../GSMColorPicker.js";
+import {SUColorKit} from "../SUColorKit.js";
 import {GradientShader} from "../util/GradientShader.js";
 import {FileSystem} from "../fs/FileSystem.js";
 import {GuiUtil} from "../util/GuiUtil.js";
@@ -12,7 +12,7 @@ export class GradientPicker {
 
     /**
      * References to the application's main class
-     * @type {GSMColorPicker|null}
+     * @type {SUColorKit|null}
      */
     app = null;
 
@@ -206,7 +206,7 @@ export class GradientPicker {
 
     /**
      * Constructor
-     * @param app {GSMColorPicker} - The application's main class.
+     * @param app {SUColorKit} - The application's main class.
      */
     constructor(app) {
         this.app = app;
@@ -626,8 +626,7 @@ export class GradientPicker {
             // select the color
             this.selectColorAt(x, y);
         });
-
-        this.overlayCanvas.addEventListener('mouseup', () => {
+        window.addEventListener('mouseup', () => {
             this.mouseIsDown = false;
             this.mousePanel = null;
         });

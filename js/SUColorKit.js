@@ -1,3 +1,13 @@
+/**
+ * File: SUColorKit.js
+ * Project: Scott's Utility Color Kit
+ * Author: Scott Mitting
+ * Abstract:
+ *  Main application class for a color picker and conversion tool,
+ *  initially launched as a Chrome extension, with plans to expand
+ *  to HeyPuter (puter.com) and other browsers in the future.
+ */
+
 import {PixelColor} from "./util/PixelColor.js";
 import {FileSystem} from "./fs/FileSystem.js";
 
@@ -14,7 +24,7 @@ import {HelpTab} from "./tabs/HelpTab.js";
 /**
  * Main application class.
  */
-export class GSMColorPicker {
+export class SUColorKit {
 
     /**
      * The color object that holds the current color
@@ -244,6 +254,11 @@ export class GSMColorPicker {
      */
     updateOverlayImage() {
 
+        // if no selection, use default
+        if (!this.selectedOverlay) {
+            this.selectedOverlay = 'images/color-picker-logo.png';
+        }
+
         // this is experimental code that rewrites CSS on the fly (seems to work)
         let $style = document.createElement('style');
         let overlay = this.selectedOverlay;
@@ -439,13 +454,13 @@ export class GSMColorPicker {
     /**
      * Loads the color object's values from localStorage if they exist.
      *
-     * This function checks if there is a saved color value in localStorage with the key 'GSMColorPicker'.
+     * This function checks if there is a saved color value in localStorage with the key 'SUColorKit'.
      * If a saved value exists, it is loaded into the color object using the `fromHex()` method.
      *
      * @return {boolean} Returns true if a value was loaded
      */
     #loadLocalStorage() {
-        let savedData = localStorage.getItem('GSMColorPicker');
+        let savedData = localStorage.getItem('SUColorKit');
         if (savedData) {
             let data = JSON.parse(savedData);
 
@@ -459,13 +474,17 @@ export class GSMColorPicker {
             this.setOverlay(data.showOverlay);
             return true;
         }
+        else {
+            // if new settings file, use defaults
+            this.selectedOverlay = 'images/color-picker-logo-small.png';
+        }
         return false;
     }
 
     /**
      * Saves the color object's values to localStorage.
      *
-     * This function saves the color object's values to localStorage with the key 'GSMColorPicker'.
+     * This function saves the color object's values to localStorage with the key 'SUColorKit'.
      * The color value is stored as a hexadecimal string representation.
      *
      * @return {string} Returns the serialized data
@@ -476,9 +495,13 @@ export class GSMColorPicker {
             showOverlay: this.showOverlay,
             selectedOverlay: this.selectedOverlay
         });
-        localStorage.setItem('GSMColorPicker', savedData);
+        localStorage.setItem('SUColorKit', savedData);
         return savedData;
     }
 }
 
-export let app = new GSMColorPicker();
+/**
+ * Application instance.
+ * @type {SUColorKit}
+ */
+export let app = new SUColorKit();

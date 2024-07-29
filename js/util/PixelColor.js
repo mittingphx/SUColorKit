@@ -176,10 +176,6 @@ export class PixelColor {
      * @return {void} This function does not return a value.
      */
     fromHSV(h, s, v) {
-        if (v === 0) {
-            v = 0.001; // zero does bad things
-        }
-
         this.hue = h;
         this.sat = s;
         this.val = v;

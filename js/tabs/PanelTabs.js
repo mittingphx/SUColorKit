@@ -7,7 +7,7 @@ export class PanelTabs {
 
     /**
      * Reference to the main application
-     * @type {GSMColorPicker|null}
+     * @type {SUColorKit|null}
      */
     app = null;
 
@@ -62,6 +62,7 @@ export class PanelTabs {
 
     /**
      * Constructor grabs DOM references and sets up event listeners.
+     * @param app {SUColorKit}
      */
     constructor(app) {
         this.app = app;

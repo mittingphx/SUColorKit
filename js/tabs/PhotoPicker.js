@@ -1,5 +1,5 @@
 import {PixelColor} from "../util/PixelColor.js";
-import {GSMColorPicker} from "../GSMColorPicker.js";
+import {SUColorKit} from "../SUColorKit.js";
 import {FileSystem} from "../fs/FileSystem.js";
 import {GuiUtil} from "../util/GuiUtil.js";
 import {SelectHelper} from "../util/SelectHelper.js";
@@ -18,7 +18,7 @@ export class PhotoPicker {
 
     /**
      * References to the application's main class
-     * @type {GSMColorPicker|null}
+     * @type {SUColorKit|null}
      */
     app = null;
 
@@ -115,7 +115,7 @@ export class PhotoPicker {
 
     /**
      * Constructor
-     * @param app {GSMColorPicker} - The application's main class.
+     * @param app {SUColorKit} - The application's main class.
      */
     constructor(app) {
         this.app = app;

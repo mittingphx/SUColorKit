@@ -131,6 +131,14 @@ export class PixelMath {
     static hsvToRgb(h, s, v) {
         let r, g, b;
 
+        // zeros do bad things
+        if (s < 0.001) {
+            s = 0.001;
+        }
+        if (v < 0.001) {
+            v = 0.001;
+        }
+
         s = s / 100.0;
         v = v / 100.0;
 

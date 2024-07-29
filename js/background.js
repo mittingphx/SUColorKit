@@ -1,9 +1,11 @@
+// this is where background code would go in a Chrome extension
 
+/*
 chrome.runtime.onInstalled.addListener(() => {
 
     chrome.contextMenus.create({
-        "id": "GSMColorPicker",
-        "title": "✪ GSM Color Picker",
+        "id": "SUColorKit",
+        "title": "Scott's Utility Color Kit",
         "contexts": ["all"]
     })
 });
@@ -11,8 +13,8 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     let color = info.selectionText;
-    console.log('TODO: open color picker: ' + color);
     //chrome.tabs.create({
     //  url: `https://www.google.com/search?q=${encodeURIComponent(info.selectionText)}`
     //})
 });
+*/

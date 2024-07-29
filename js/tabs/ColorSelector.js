@@ -1,5 +1,5 @@
 import {PixelColor} from "../util/PixelColor.js";
-import {GSMColorPicker} from "../GSMColorPicker.js";
+import {SUColorKit} from "../SUColorKit.js";
 import {GuiUtil} from "../util/GuiUtil.js";
 
 /**
@@ -11,7 +11,7 @@ export class ColorSelector {
 
     /**
      * References to the application's main class
-     * @type {GSMColorPicker|null}
+     * @type {SUColorKit|null}
      */
     app = null;
 
@@ -119,7 +119,7 @@ export class ColorSelector {
     
     /**
      * Initializes a new instance of the ColorSelector class.
-     * @param {GSMColorPicker} app - The application's main class.
+     * @param {SUColorKit} app - The application's main class.
      */
     constructor(app) {
         this.app = app;

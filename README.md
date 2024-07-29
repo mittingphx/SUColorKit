@@ -45,4 +45,14 @@ These features are planned to be released soon:
 * Tools for picking complementary colors
 
 
-  
+### Source Code Organization
+
+* assets/ - third-party styles and libraries
+* css/ - stylesheets
+* data/ - built-in json data
+* images/ - built-in image data 
+* js/ - code root
+* js/fs/ - virtual file system code
+* js/tabs/ - tab views
+* js/util/ - helper methods
+
