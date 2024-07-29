@@ -1,10 +1,10 @@
-# Scott's Ultimate Color Kollector
+# Scott's Utility Color Kit
 
 <img src="images/color-picker-logo.png" align="right" 
   alt="Color Kollector logo by Scott Mitting" 
   width="150" height="150" />
 
-The color kollector is a Google Chrome Extension for both choosing colors 
+The color kit is a Google Chrome Extension for both choosing colors 
 and performing conversions between RGB, HSV, and Hex directly in the browser.
 A variety of tools are available within the extension:
 
