@@ -18,7 +18,8 @@
     </div>
 
     <!-- the popup menu when you click on the action-menu icon -->
-    <select class="action-dropdown">
+    <label for="ddlAction"></label>
+    <select class="action-dropdown" id="ddlAction">
         <optgroup label="Color Converter">
             <option value="about">About</option>
         </optgroup>
@@ -35,19 +36,6 @@
             <option value="exit">Exit</option>
         </optgroup>
     </select>
-    <style>
-        .action-menu {
-            cursor: context-menu;
-        }
-        .action-dropdown {
-            cursor: context-menu;
-            position: absolute;
-            top: 14px;
-            right: 44px;
-            width: 20px;
-            opacity: 0;  /* stay hidden but still selectable */
-        }
-    </style>
 
     <!-- the tabs -->
     <div class="panel-tabs">
@@ -317,10 +305,18 @@
         </table>
 
         <p>
-            <img src="https://downloads.intercomcdn.com/i/o/234105/0d29fbdf17e257cdfc2ba1ba/7103925065c5e9bd6ac7ac9efd453fd7.png"
-                 style="height:25px;"
-            />
-            <br>I could really use a dollar or two.
+            <a href="https://buymeacoffee.com/scottmitting" target="_blank">
+                <img src="https://downloads.intercomcdn.com/i/o/234105/0d29fbdf17e257cdfc2ba1ba/7103925065c5e9bd6ac7ac9efd453fd7.png"
+                     alt="Buy Me a Coffee.com" style="height:25px;"/>
+            </a>
+            &nbsp;&nbsp;
+            <a href="https://ko-fi.com/N4N2113HUS" target="_blank">
+                <img height="36" style="border:0;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3"
+                     alt="Buy Me a Coffee at ko-fi.com" />
+            </a>
+            <br>
+            <br>
+            I could really use a dollar or two.
         </p>
         <br><br>
         <p>
