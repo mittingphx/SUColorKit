@@ -671,16 +671,7 @@ export class GradientPicker {
 
         // selected 2d gradient
         this.overlayCtx.clearRect(0, 0, 200, 130);
-        this.overlayCtx.beginPath();
-        this.overlayCtx.arc(this.currentX, this.currentY, 3.5, 0, 2 * Math.PI, false);
-        this.overlayCtx.strokeStyle = 'black';
-        this.overlayCtx.lineWidth = 1;
-        this.overlayCtx.stroke();
-        this.overlayCtx.beginPath();
-        this.overlayCtx.arc(this.currentX, this.currentY, 3, 0, 2 * Math.PI, false);
-        this.overlayCtx.strokeStyle = 'yellow';
-        this.overlayCtx.lineWidth = 1;
-        this.overlayCtx.stroke();
+        GuiUtil.drawSelectionCircle(this.overlayCtx, this.currentX, this.currentY);
 
         // selected 1d alternative gradient
         if (this.#usesZ()) {

@@ -550,13 +550,18 @@ export class FileSystemView {
         if (category === 'Uncategorized') {
             category = '-';
         }
-        this.$ddlCategory.value = category;
-        if (this.$ddlCategory.value !== category) { // missing from dropdown if assignment fails
-            let newOption = new Option(category, category, true, true);
+        let hasCategory = false;
+        for (let i = 0; i < this.$ddlCategory.options.length; i++) {
+            if (this.$ddlCategory.options[i].value === category) {
+                hasCategory = true;
+                break;
+            }
+        }
+        if (hasCategory === false) {let newOption = new Option(category, category, true, true);
             let insertAt = this.$ddlCategory.options[this.$ddlCategory.options.length - 1];
             this.$ddlCategory.add(newOption, insertAt);
         }
-        //this.$ddlCategory.dispatchEvent(new Event('change'));
+        this.$ddlCategory.value = category;
 
         // show the contents if already loaded
         if (currentFile.loaded) {

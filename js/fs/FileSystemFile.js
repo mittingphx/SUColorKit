@@ -20,7 +20,7 @@ export class FileSystemFile {
 
     /**
      * The folder this file is stored in
-     * @type {string|null}
+     * @type {string|FileSystemFolder|null}
      */
     folder = null;
 

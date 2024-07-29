@@ -8,6 +8,8 @@ import {SettingsTab} from "./tabs/SettingsTab.js";
 import {ColorSelector} from "./tabs/colorSelector.js";
 import {GradientPicker} from "./tabs/GradientPicker.js";
 import {ColorListener} from "./util/ColorListener.js";
+import {MouseDrag} from "./util/MouseDrag.js";
+import {HelpTab} from "./tabs/HelpTab.js";
 
 /**
  * Main application class.
@@ -21,10 +23,28 @@ export class GSMColorPicker {
     color = null;
 
     /**
+     * The <div> containing the title and action buttons.
+     * @type {HTMLElement|null}
+     */
+    $header = null;
+
+    /**
      * The button that closes the color selector
      * @type {HTMLElement|null}
      */
     closeButton = null;
+
+    /**
+     * The button that opens the action menu.
+     * @type {HTMLElement|null}
+     */
+    menuButton = null;
+
+    /**
+     * The <select> functioning as the action menu
+     * @type {HTMLSelectElement|null}
+     */
+    menuDropdown = null;
 
     /**
      * The tabs that are currently displayed.
@@ -70,15 +90,27 @@ export class GSMColorPicker {
 
     /**
      * Handler for the settings tab.
-     * @type {null|SettingsTab}
+     * @type {SettingsTab}
      */
     settingsTab = null;
+
+    /**
+     * Handler for the help tab.
+     * @type {HelpTab}
+     */
+    helpTab = null;
 
     /**
      * Access to the virtual file system used by the application.
      * @type {FileSystem}
      */
     files = null;
+
+    /**
+     * The current setting for the overlay image.
+     * @type {string|null}
+     */
+    selectedOverlay = null;
 
     /**
      * Constructor sets up interactive elements of the application.
@@ -92,6 +124,9 @@ export class GSMColorPicker {
         this.color = new PixelColor(0, 0, 0);
         this.showOverlay = false;
 
+        // load color from local storage
+        let loadedLocalStorage = this.#loadLocalStorage();
+
         // create instances of all interactive code
         this.colorSelector = new ColorSelector(this);
         this.colorSelector.refresh();
@@ -99,18 +134,20 @@ export class GSMColorPicker {
         this.gradientPicker = new GradientPicker(this);
         this.photoPicker = new PhotoPicker(this);
         this.settingsTab = new SettingsTab(this);
+        this.helpTab = new HelpTab(this);
         this.tabs = new PanelTabs(this);
 
-        // load color from local storage
-        if (this.#loadLocalStorage()) {
+        // refresh if we loaded from local storage earlier
+        // note: had to separate this because the object constructors
+        // were having initially incorrect selections because the data
+        // they loaded from the app class wasn't loaded yet
+        if (loadedLocalStorage) {
             this.refresh();
         }
         
         // initialize event listeners
         this.#initDomEvents();
-
     }
-
 
     /**
      * Sets the app's selected color and updates all panels.
@@ -133,10 +170,138 @@ export class GSMColorPicker {
     }
 
     /**
+     * Changes the image displayed in the color selector over the
+     * selected color.
+     * @param selection {string|null}
+     */
+    setOverlayImage(selection) {
+
+        // if no selection, use default
+        if (!selection) {
+            selection = 'images/color-picker-logo-small.png';
+        }
+
+        // update image and save to local storage
+        this.selectedOverlay = selection;
+        this.#saveLocalStorage();
+        this.updateOverlayImage();
+    }
+
+    /**
+     * Returns the image selected as the overlay over the selected color.
+     * @return {string}
+     */
+    getOverlayImage() {
+        return this.selectedOverlay;
+    }
+
+    /**
+     * Loads the overlay image into a <img> tag.
+     * @param $img {HTMLImageElement}
+     * @param w {number} optional width to set
+     * @param h {number} optional height to set
+     */
+    showOverlayImage($img, w = 50, h = 50) {
+
+        // if no selection, use default
+        if (!this.selectedOverlay) {
+            this.selectedOverlay = 'images/color-picker-logo.png';
+        }
+
+        // hide image if no overlay selected
+        if (this.selectedOverlay === 'none') {
+            $img.src = '';
+            $img.style.display = 'none';
+            return;
+        }
+
+        // show image if selected
+        $img.style.display = 'block';
+
+        // show embedded image if selected
+        if (!this.selectedOverlay.startsWith('file:')) {
+            $img.src = this.selectedOverlay;
+            $img.width = w;
+            $img.height = h;
+            return;
+        }
+
+        // otherwise, load the image the user uploaded from local storage
+        let fileId = parseInt(this.selectedOverlay.substring(5));
+        FileSystem.loadFileById(fileId, (file) => {
+            if (file == null) {
+                console.error('could not load file ' + fileId);
+                return;
+            }
+            $img.src = file.contents;
+            $img.width = w;
+            $img.height = h;
+        });
+    }
+
+    /**
+     * Updates the CSS class that displays the overlay image.
+     */
+    updateOverlayImage() {
+
+        // this is experimental code that rewrites CSS on the fly (seems to work)
+        let $style = document.createElement('style');
+        let overlay = this.selectedOverlay;
+
+        if (overlay.startsWith('file:')) {
+            let fileId = parseInt(overlay.substring(5));
+            overlay = FileSystem.loadFileById(fileId).contents;
+        }
+
+        $style.innerHTML = `
+            .panel-color-overlay {
+                background-image: url('${overlay}');
+                background-size: contain;
+            }
+        `;
+        document.body.appendChild($style);
+    }
+
+    /**
      * Closes the color selector.
      */
     close() {
+        // HeyPuter exit
+        this.getPuter((puter) => {
+            puter.exit();
+        });
+
+        // normal exit
         window.close();
+    }
+
+    /**
+     * If running the Puter.com o/s, the callback will be sent the puter object.
+     * @param callback {function(*)}
+     */
+    getPuter(callback) {
+        if (this.getApplicationType() === 'puter-app') {
+            let puter = window['puter'];
+            if (typeof puter === 'undefined') {
+                console.warn('Puter.com is not running');
+            }
+            else {
+                callback(puter);
+            }
+        }
+    }
+
+
+    /**
+     * Returns the application type.
+     * @return {string}
+     */
+    getApplicationType() {
+        let url = new URL(window.location.href);
+        if (url.searchParams.get('mode') === 'HeyPuter') {
+            return 'puter-app';
+        }
+        return 'chrome-extension';
     }
 
     /**
@@ -162,13 +327,112 @@ export class GSMColorPicker {
      * Initializes DOM elements used by this object.
      */
     #initDomEvents() {
+
+        // get header, allow dragging to make become separate window
+        this.$header = document.querySelector(".panel-header");
+        new MouseDrag(this.$header, (drag, _) => {
+            if (drag.distance() > 5) {
+                this.#moveToBrowserWindow();
+            }
+        });
+
         // action buttons in header
         this.closeButton = document.querySelector(".action-close");
         this.closeButton.addEventListener("click", () => {
             this.close();
         });
 
-        // TODO: implement hamburger menu
+        this.menuButton = document.querySelector(".action-menu");
+        this.menuDropdown = document.querySelector('.action-dropdown');
+        this.#clearActionDropdownSelection();
+        this.menuDropdown.addEventListener('change', (event) => {
+            let value = event.target.value;
+            this.#clearActionDropdownSelection();
+            switch (value) {
+                case 'about':
+                    this.tabs.show('about');
+                    break;
+                case 'upload':
+                    this.tabs.show('settings');
+                    this.settingsTab.launchFileManager();
+                    break;
+                case 'backup':
+                    alert('TODO: implement backup/export');
+                    break;
+                case 'restore':
+                    alert('TODO: implement restore/import');
+                    break; 
+                case 'settings':
+                    this.tabs.show('settings');
+                    break;
+                case 'help':
+                    this.tabs.show('about');
+                    break;
+                case 'exit':
+                    this.close();
+                    break;
+            }
+        });
+
+        // if in a new window, hide the header but place the action button next to the tabs
+        if (window.isNewWindow) {
+            // hide header
+            this.$header.style.display = 'none';
+
+            // move action button
+            this.menuButton.remove();
+            document.querySelector('.panel-tabs').append(this.menuButton)
+
+            // move dropdown menu directly over action button
+            this.menuDropdown.style.right = '11px';
+            this.menuDropdown.style.top = '13px';
+
+            // clean up border radius
+            let $panel = document.querySelector('.panel');
+            $panel.style.borderTopLeftRadius = '0px';
+            $panel.style.borderTopRightRadius = '0px';
+        }
+
+    }
+
+    /**
+     * Clears the <select> selected value, so it behaves like a menu.
+     */
+    #clearActionDropdownSelection() {
+        this.menuDropdown.selectedIndex = -1;
+        for (let option of this.menuDropdown.options) {
+            option.selected = false;
+        }
+    }
+
+    /**
+     * Opens a new browser window and moves the current app within it.
+     */
+    #moveToBrowserWindow() {
+
+        // only run when attached to browser instead of in a new window
+        if (window.isNewWindow) {
+            return;
+        }
+
+        // only allow one window to be created
+        if (window.createdWindow === true) {
+            return;
+        }
+        window.createdWindow = true;
+
+        // create the window over where the mouse is now
+        let win = window.open('#', '_blank',
+            'width=425,height=375,' +
+            'top=' + (window.top.screenY - 25) +
+            ',left=' + (window.top.screenX) +
+            ',resizable,scrollbars');
+        win.document.head.append(document.head.childNodes)
+        win.document.body.append(document.body.childNodes);
+        win.isNewWindow = true;
+
+        // close this window
+        window.close();
     }
 
 
@@ -184,6 +448,9 @@ export class GSMColorPicker {
         let savedData = localStorage.getItem('GSMColorPicker');
         if (savedData) {
             let data = JSON.parse(savedData);
+
+            this.selectedOverlay = data.selectedOverlay;
+            this.updateOverlayImage();
 
             let color = new PixelColor(0, 0, 0);
             color.fromHex(data.color);
@@ -206,7 +473,8 @@ export class GSMColorPicker {
     #saveLocalStorage() {
         let savedData = JSON.stringify({
             color: this.color.hex,
-            showOverlay: this.showOverlay
+            showOverlay: this.showOverlay,
+            selectedOverlay: this.selectedOverlay
         });
         localStorage.setItem('GSMColorPicker', savedData);
         return savedData;

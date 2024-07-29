@@ -42,6 +42,12 @@ export class PanelTabs {
     $tabAbout = null;
 
     /**
+     * Reference to the help tab
+     * @type {HTMLElement|null}
+     */
+    $tabHelp = null;
+
+    /**
      * Array with all references to tabs.
      * @type {[]}
      */
@@ -66,7 +72,8 @@ export class PanelTabs {
             this.$tabList = document.querySelector("#tab-list"),
             this.$tabPhotos = document.querySelector("#tab-photos"),
             this.$tabSettings = document.querySelector("#tab-settings"),
-            this.$tabAbout = document.querySelector("#tab-about")
+            this.$tabAbout = document.querySelector("#tab-about"),
+            this.$tabHelp = document.querySelector("#tab-help")
         ];
 
         // check if tabs exist
@@ -98,6 +105,14 @@ export class PanelTabs {
     }
 
     /**
+     * Shows a tab by its ID
+     * @param tabId {string}
+     */
+    show(tabId) {
+        this.#showTab(document.querySelector('#tab-' + tabId));
+    }
+
+    /**
      * Displays the selected tab's view
      * @param $tab {HTMLElement} the tab element who needs its view displayed
      */
@@ -107,16 +122,22 @@ export class PanelTabs {
             return;
         }
 
+        // show selected tab
         this.#clearActive()
-        $tab.classList.add("active");
         document.querySelector('#' + $tab.id + '-view').classList.add("active");
         if ($tab.id === 'tab-settings') {
             this.app.settingsTab.refresh();
         }
 
-        // store selected tab
+        // store selected tab in localStorage
         this.#lastSelected = $tab.id;
         localStorage.setItem("lastSelected", this.#lastSelected);
+
+        // removing and re-adding action class to make animation trigger
+        $tab.classList.remove("active");
+        setTimeout(() => {
+            $tab.classList.add("active");
+        });
     }
 
     /**

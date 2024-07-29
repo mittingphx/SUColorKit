@@ -106,4 +106,24 @@ export class GuiUtil {
         };
     }
 
+    /**
+     * Draws a circle around a highlighted pixel.
+     * @param ctx {CanvasRenderingContext2D}
+     * @param x {Number}
+     * @param y {Number}
+     */
+    static drawSelectionCircle(ctx, x, y) {
+        ctx.beginPath();
+        ctx.arc(x, y, 3.5, 0, 2 * Math.PI, false);
+        ctx.strokeStyle = 'black';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, 2 * Math.PI, false);
+        ctx.strokeStyle = 'yellow';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    }
+
+
 }

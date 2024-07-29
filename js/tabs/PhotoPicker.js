@@ -2,6 +2,7 @@ import {PixelColor} from "../util/PixelColor.js";
 import {GSMColorPicker} from "../GSMColorPicker.js";
 import {FileSystem} from "../fs/FileSystem.js";
 import {GuiUtil} from "../util/GuiUtil.js";
+import {SelectHelper} from "../util/SelectHelper.js";
 
 /**
  * Displays a range of colors on a canvas from which the user can click on
@@ -13,7 +14,7 @@ export class PhotoPicker {
      * Size of the canvas to display photos.
      * @type {{width: number, height: number}}
      */
-    size = { width: 400, height: 275 };
+    size = {width: 400, height: 275};
 
     /**
      * References to the application's main class
@@ -92,7 +93,7 @@ export class PhotoPicker {
      * How much to scroll the image
      * @type {{x: number, y: number}}
      */
-    #imageScroll = { x: 0, y: 0 };
+    #imageScroll = {x: 0, y: 0};
 
     /**
      * The user's scaling of the image against the fill scale.
@@ -136,7 +137,7 @@ export class PhotoPicker {
      * Changes the selected photo from the dropdown list.
      * @param {string|null} photo the image to display, or first from the list if null
      */
-    selectPhoto(photo= null) {
+    selectPhoto(photo = null) {
 
         // select first photo if not specified
         if (!photo) {
@@ -221,7 +222,7 @@ export class PhotoPicker {
         });
 
         // load options from filesystem
-        this.#buildGradientDropdown();
+        this.#buildPhotoDropdown();
     }
 
     /**
@@ -271,13 +272,13 @@ export class PhotoPicker {
         document.addEventListener('keydown', event => {
             switch (event.key) {
                 case ' ':
-                    keyDown = { ArrowLeft: false, ArrowRight: false, ArrowUp: false, ArrowDown: false };
+                    keyDown = {ArrowLeft: false, ArrowRight: false, ArrowUp: false, ArrowDown: false};
                     if (keyInterval != null) {
                         clearInterval(keyInterval);
                         keyInterval = null;
                     }
                     this.#userScale = 1.0;
-                    this.#imageScroll = { x: 0, y: 0 };
+                    this.#imageScroll = {x: 0, y: 0};
                     this.#renderImage();
                     break;
 
@@ -294,14 +295,12 @@ export class PhotoPicker {
 
                     // start moving picture when first arrow pressed
                     if (keyInterval == null) {
-                        let firstTime = new Date().getTime();
-                        let lastTime = firstTime
+                        let lastTime = new Date().getTime()
                         keyInterval = setInterval(() => {
 
                             // get time delta
                             let now = new Date().getTime();
                             let diff = now - lastTime;
-                            let elapsed = now - firstTime;
 
                             let pixelsPerSecond = 0.5;// * (elapsed / 1000);
                             //console.log('pixelsPerSecond: ' + pixelsPerSecond);
@@ -323,10 +322,22 @@ export class PhotoPicker {
 
                             // scale image
                             if (keyDown['PageUp']) {
+                                let oldW = this.#imageScale.width * this.#userScale;
+                                let oldH = this.#imageScale.height * this.#userScale;
                                 this.#userScale *= 1.01;// * pixelsPerSecond;
+                                let newW = this.#imageScale.width * this.#userScale;
+                                let newH = this.#imageScale.height * this.#userScale;
+                                this.#imageScroll.x -= (newW - oldW) / 2;
+                                this.#imageScroll.y -= (newH - oldH) / 2;
                             }
                             if (keyDown['PageDown']) {
+                                let oldW = this.#imageScale.width * this.#userScale;
+                                let oldH = this.#imageScale.height * this.#userScale;
                                 this.#userScale /= 1.01;// * pixelsPerSecond;
+                                let newW = this.#imageScale.width * this.#userScale;
+                                let newH = this.#imageScale.height * this.#userScale;
+                                this.#imageScroll.x -= (newW - oldW) / 2;
+                                this.#imageScroll.y -= (newH - oldH) / 2;
                             }
                             if (this.#userScale < 0.5) {
                                 this.#userScale = 0.5;
@@ -336,16 +347,14 @@ export class PhotoPicker {
                             }
 
                             // limit scrolling to having the image half-way off the screen
-                            let w = this.#imageScale.width;// / this.#userScale;
-                            let h = this.#imageScale.height;// / this.#userScale;
+                            let w = this.#imageScale.width / this.#userScale;
+                            let h = this.#imageScale.height / this.#userScale;
                             let w0 = this.canvas.width;
                             let h0 = this.canvas.height;
-                            let minX = -w / 2;
-                            let minY = -h + h0 / 2;
-                            let maxX = w / 2;
-                            let maxY = h / 2 - h0 / 2;
-
-                            //console.log('limits ' + minX + ' ' + minY + ' ' + maxX + ' ' + maxY);
+                            let minX = 0 - (w / 2);
+                            let minY = 0 - (h / 2);
+                            let maxX = w0 - (w / 2);
+                            let maxY = h0 - (h / 2);
 
                             if (this.#imageScroll.x < minX) {
                                 this.#imageScroll.x = minX;
@@ -425,7 +434,7 @@ export class PhotoPicker {
      * @param imgUrl {string} - The url of the image to load
      */
     #loadImage(imgUrl) {
-        this.#imageScroll = { x: 0, y: 0 };
+        this.#imageScroll = {x: 0, y: 0};
         if (this.photo.startsWith('file:')) {
             // image from localStorage
             let fileId = parseInt(this.photo.substring(5));
@@ -438,20 +447,19 @@ export class PhotoPicker {
                 img.src = file.contents;
                 img.onload = () => {
                     let rect = GuiUtil.fillCentered(this.canvas, img);
-                    this.#imageScroll = { x: rect.x, y: rect.y };
-                    this.#imageScale = { width: rect.width, height: rect.height };
+                    this.#imageScroll = {x: rect.x, y: rect.y};
+                    this.#imageScale = {width: rect.width, height: rect.height};
                     this.#image = img;
                 };
             });
-        }
-        else {
+        } else {
             // image from extension's folder
             const img = new Image();
             img.src = imgUrl;
             img.onload = () => {
                 let rect = GuiUtil.fillCentered(this.canvas, img);
-                this.#imageScroll = { x: rect.x, y: rect.y };
-                this.#imageScale = { width: rect.width, height: rect.height };
+                this.#imageScroll = {x: rect.x, y: rect.y};
+                this.#imageScale = {width: rect.width, height: rect.height};
                 this.#image = img;
             };
         }
@@ -461,19 +469,8 @@ export class PhotoPicker {
      * Draws the current selection on the overlay canvas.
      */
     #drawSelection() {
-
-        // selected 2d gradient
         this.overlayCtx.clearRect(0, 0, 400, 275);
-        this.overlayCtx.beginPath();
-        this.overlayCtx.arc(this.currentX, this.currentY, 3.5, 0, 2 * Math.PI, false);
-        this.overlayCtx.strokeStyle = 'black';
-        this.overlayCtx.lineWidth = 1;
-        this.overlayCtx.stroke();
-        this.overlayCtx.beginPath();
-        this.overlayCtx.arc(this.currentX, this.currentY, 3, 0, 2 * Math.PI, false);
-        this.overlayCtx.strokeStyle = 'yellow';
-        this.overlayCtx.lineWidth = 1;
-        this.overlayCtx.stroke();
+        GuiUtil.drawSelectionCircle(this.overlayCtx, this.currentX, this.currentY);
     }
 
     /**
@@ -482,7 +479,7 @@ export class PhotoPicker {
      * any files directly in the 'Custom Palettes' folder as 'Uncategorized'.
      * The first optgroup is the hardcoded shaders and is left alone.
      */
-    #buildGradientDropdown() {
+    #buildPhotoDropdown() {
 
         let fileSystem = new FileSystem();
         let folder = fileSystem.getFolder('Photos');
@@ -490,39 +487,14 @@ export class PhotoPicker {
         // add each subfolder as an optgroup
         for (let i = 0; i < folder.folders.length; i++) {
             let subfolder = folder.folders[i];
-            let optGroup = this.#createOptGroupForFolder(subfolder);
+            let optGroup = SelectHelper.createOptGroupForFolder(subfolder);
             this.$ddlPhoto.appendChild(optGroup);
         }
 
         // added files outside any subfolder as 'uncategorized' optgroup
-        if (folder.files.length > 0)  {
-            let optGroup = this.#createOptGroupForFolder(folder, 'Uncategorized');
+        if (folder.files.length > 0) {
+            let optGroup = SelectHelper.createOptGroupForFolder(folder, 'Uncategorized');
             this.$ddlPhoto.appendChild(optGroup);
         }
-    }
-
-    /**
-     * Creates an optgroup for a dropdown list of all the files in a folder.
-     * @param fsFolder {FileSystemFolder} the folder to create the optgroup for
-     * @param folderName {string|null} the name of the folder (optional, default is folder name)
-     * @returns {HTMLOptGroupElement}
-     */
-    #createOptGroupForFolder(fsFolder, folderName = null) {
-        let optGroup = document.createElement('optgroup');
-        optGroup.label = folderName || fsFolder.name;
-        for (let j = 0; j < fsFolder.files.length; j++) {
-            //console.log(subfolder.files[j]);
-            let file = fsFolder.files[j];
-            let option = document.createElement('option');
-            if (file.isUserFile()) {
-                option.value = 'file:' + file.id;
-            }
-            else {
-                option.value = file.localUrl;
-            }
-            option.innerHTML = file.name;
-            optGroup.appendChild(option);
-        }
-        return optGroup;
     }
 }

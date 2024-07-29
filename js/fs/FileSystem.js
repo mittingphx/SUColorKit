@@ -175,10 +175,10 @@ export class FileSystem {
     /**
      * Loads a file from localStorage by id directly
      * @param fileId {number} - The id of the file
-     * @param callback {function} - The function to call when the file is loaded
+     * @param callback {function|null} - The function to call when the file is loaded
      * @returns {FileSystemFile|null} - The loaded file if immediately available (usually is)
      */
-    static loadFileById(fileId, callback) {
+    static loadFileById(fileId, callback = null) {
         let item = localStorage.getItem('file_' + fileId);
         if (item === null) {
             if (typeof callback === 'function') {
@@ -219,6 +219,14 @@ export class FileSystem {
         file.id = this.#metadata.nextFileId++;
         file.folder = folder.getFullPath();
         folder.files.push(file);
+
+        // remove reference to this file in any other folder
+        let folderList = this.getRecursiveFolders();
+        for (let i = 0; i < folderList.length; i++) {
+            if (folderList[i] === folder) continue; // this is the only one we want to keep
+            if (folderList[i].containsFile(file))
+            folderList[i].removeFile(file);
+        }
 
         // write to the local storage
         this.saveFile(file);
@@ -309,9 +317,14 @@ export class FileSystem {
         // use folder path in file if available
         if (file.folder) {
             if (typeof file.folder === 'string') {
-                file.folder = this.getFolder(file.folder);
+                file.folder = this.getFolder(file.folder, null, true);
             }
             if (file.folder instanceof FileSystemFolder) {
+                // make sure file is in the correct place, since it may have been moved
+                if (!file.folder.containsFile(file)) {
+                    // assign file to this folder and no other folder
+                    file.folder.addFileObject(file);
+                }
                 return file.folder;
             }
             return null;
@@ -437,7 +450,7 @@ export class FileSystem {
 
         this.folders.push(new FileSystemFolder("Overlay Images"));
         this.folders[3].folders.push(new FileSystemFolder("Built In"));
-        this.folders[3].folders[0].files.push(new FileSystemFile("Logo", "images/color-picker-logo.png"));
+        this.folders[3].folders[0].files.push(new FileSystemFile("Logo", "images/color-picker-logo-small.png"));
 
         FileSystem.#setParentFolders(this.folders, null);
     }

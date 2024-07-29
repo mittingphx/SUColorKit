@@ -18,6 +18,7 @@ body {
 
 /** PANEL HEADER **/
 .panel-header {
+    user-select: none;
     background: #333;
     color: #fff;
     font: bold 11pt serif;
@@ -44,6 +45,7 @@ body {
 
 /** PANEL TABS **/
 .panel-tabs {
+    user-select: none;
     background: #918477;
     padding: 3px 5px 0 0;
     overflow: hidden;
@@ -77,6 +79,19 @@ body {
     box-shadow: 2px 0 4px rgba(0,0,0,0.5);
     cursor: default;
 }
+
+/* blink 3 times when a new tab is active */
+.panel-tab.active {
+    animation: blink 0.16s;
+    animation-iteration-count: 2;
+}
+
+@keyframes blink {
+    0% {background: #bbaa99}
+    50% {background: #ffffff}
+    100% {background: #bbaa99}
+}
+
 
 
 /** TAB VIEW CONTENTS **/
@@ -424,4 +439,50 @@ td.list-color {
     font: 9pt sans-serif;
     float: right;
     margin: 5px 0 0 20px;
+}
+
+/** About text **/
+
+#tab-about-view p {
+    text-align: center;
+}
+
+/** Help Text **/
+
+#tab-help-view h2 {
+    margin: 0 10px;
+}
+#tab-help-view h2 button {
+    float: right;
+}
+#tab-help-view h2 a {
+    float: right;
+    color: buttontext;
+    background: buttonface;
+    border: 1px solid black;
+    border-radius: 3px;
+    font: 9pt sans-serif;
+    text-decoration: none;
+    padding: 3px;
+    user-select: none;
+}
+#tab-help-view h2 a:hover {
+    background-color: #bbb;
+    transition: background-color 0.4s;
+}
+
+
+
+.help-text {
+    font: 10pt sans-serif;
+    color: #333;
+    text-align: justify;
+
+    max-height:200px;
+    overflow:auto;
+    margin: 10px 0;
+    padding: 10px;
+
+    scrollbar-color: #333 #9e8d81;
+    scrollbar-width: thin;
 }

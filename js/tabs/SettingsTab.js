@@ -1,3 +1,5 @@
+import {FileSystem} from "../fs/FileSystem.js";
+import {SelectHelper} from "../util/SelectHelper.js";
 
 /**
  * Manages the settings tab.
@@ -11,35 +13,22 @@ export class SettingsTab {
     $btnManageNamedColors = null;
 
     /**
-     * Button for managing palette images
-     * @type {HTMLButtonElement|null}
+     * A <ul> list of folders in this tab.
+     * @type {HTMLUListElement|null}
      */
-    $btnManagePaletteImages = null;
+    $ulFolders = null;
 
     /**
-     * Button for managing overlays
-     * @type {HTMLButtonElement|null}
+     * The <select> of available image overlays.
+     * @type {HTMLSelectElement|null}
      */
-    $btnManageOverlays = null;
+    $ddlOverlay = null;
 
     /**
-     * Number of current named colors
-     * @type {HTMLSpanElement|null}
+     * The <img> showing the current overlay.
+     * @type {HTMLImageElement|null}
      */
-    $spanCountNamedColors = null;
-
-    /**
-     * Number of current palette images
-     * @type {HTMLSpanElement|null}
-     */
-    $spanCountManagePaletteImages = null;
-
-    /**
-     * Number of current overlay images
-     * @type {HTMLSpanElement|null}
-     */
-    $spanCountManageOverlays = null;
-
+    $imgOverlayPreview = null;
 
     /**
      * Constructor
@@ -48,51 +37,102 @@ export class SettingsTab {
     constructor(app) {
         this.app = app;
         this.#initDom();
-        //this.refresh();
+       // this.refresh();
     }
 
     /**
      * Updates the counts in the settings tab.
      */
     refresh() {
-        this.$spanCountNamedColors.innerText = this.app.files.getFileCount('Named Colors', true);
-        this.$spanCountManagePaletteImages.innerText = this.app.files.getFileCount('Custom Palettes', true);
-        this.$spanCountManageOverlays.innerText = this.app.files.getFileCount('Overlay Images', true);
+
+        // set file counts
+        this.$ulFolders.querySelectorAll('li').forEach($li => {
+            let $span = $li.querySelector('span');
+            let folder = $li.dataset.folder;
+            this.#setSpanToFileCount($span, folder);
+        })
+
+        // update overlay list
+        this.#buildOverlayList();
+
+        // update preview
+        this.app.showOverlayImage(this.$imgOverlayPreview);
+    }
+
+    /**
+     * Fills the overlay image dropdown with all available options.
+     */
+    #buildOverlayList() {
+
+        this.$ddlOverlay.innerHTML = '<option value="none">Choose Overlay</option>';
+
+        let fileSystem = new FileSystem();
+        let folder = fileSystem.getFolder('Overlay Images');
+
+        // add each subfolder as an optgroup
+        for (let i = 0; i < folder.folders.length; i++) {
+            let subfolder = folder.folders[i];
+            let optGroup = SelectHelper.createOptGroupForFolder(subfolder);
+            this.$ddlOverlay.appendChild(optGroup);
+        }
+
+        // added files outside any subfolder as 'uncategorized' optgroup
+        if (folder.files.length > 0)  {
+            let optGroup = SelectHelper.createOptGroupForFolder(folder, 'Uncategorized');
+            this.$ddlOverlay.appendChild(optGroup);
+        }
+
+        // select the current overlay
+        let selection = this.app.getOverlayImage();
+        console.log('selection', selection);
+        if (selection) {
+            this.$ddlOverlay.value = selection;
+        }
+    }
+
+    /**
+     * Fills a <span> with the count of files in the specified folder.
+     * @param $span {HTMLSpanElement}
+     * @param folderName {string}
+     */
+    #setSpanToFileCount($span, folderName) {
+        if (!$span) return;
+        let count = this.app.files.getFileCount(folderName, true) || 0;
+        $span.innerText = '' + count;
     }
 
     /**
      * Initializes DOM elements used by this object.
      */
     #initDom() {
-        
+
         // get elements for file counts
-        this.$spanCountManageOverlays = document.querySelector('.settings-overlay-images .settings-count span');
-        this.$spanCountManagePaletteImages = document.querySelector('.settings-custom-palettes .settings-count span');
-        this.$spanCountNamedColors = document.querySelector('.settings-named-colors .settings-count span');
+        this.$ulFolders = document.querySelector('ul.settings-folders');
+
+        // the preview image
+        this.$imgOverlayPreview = document.querySelector('.settings-overlay-panel img');
+
+        // dropdown for overlay selection
+        this.$ddlOverlay = document.querySelector('select#overlayImage');
+        this.$ddlOverlay.addEventListener('change', () => {
+            let selection = this.$ddlOverlay.value;
+            this.app.setOverlayImage(selection);
+            this.app.showOverlayImage(this.$imgOverlayPreview);
+        })
 
         // set event listeners for buttons
         this.$btnManageNamedColors = document.querySelector('#manageNamedColors');
         this.$btnManageNamedColors.addEventListener('click', () => {
-            this.#launchFileManager('Named Colors');
+            this.launchFileManager('Named Colors');
         });
-
-        this.$btnManagePaletteImages = document.querySelector('#managePaletteImages');
-        this.$btnManagePaletteImages.addEventListener('click', () => {
-            this.#launchFileManager('Custom Palettes');
-        });
-
-        this.$btnManageOverlays = document.querySelector('#manageOverlays');
-        this.$btnManageOverlays.addEventListener('click', () => {
-            this.#launchFileManager('Overlay Images');
-        });
-
     }
 
     /**
      * Launches the window that mimics a file manager that can be used
      * to alter the files that define the available color settings.
+     * @param folder {string|null} optional folder name
      */
-    #launchFileManager(folder) {
+    launchFileManager(folder = null) {
 
         // insert selection into url
         let url = './files.html';
@@ -103,15 +143,20 @@ export class SettingsTab {
         // center new window over current window
         let w = 800;
         let h = 400;
-        const y = window.top.screenY + 75
-        const x = window.top.outerWidth / 2 + window.top.screenX - ( w / 2);
+        let screen = { x: 0, y: 0, width: 1024, height: 768 };
+        try {
+            screen.x = window.top.screenX;
+            screen.y = window.top.screenY;
+            screen.width = window.top.outerWidth;
+            screen.height = window.top.outerHeight;
+        }
+        catch (e) {
+            // happens when used as an application in puter.com
+            console.log('app mode detected', e);
+        }
+        const y = screen.y + 75
+        const x = screen.width / 2 + screen.x - ( w / 2);
         return window.open(url, 'fileManager', `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${w}, height=${h}, top=${y}, left=${x}`);
-
-
-/*
-        window.open(url, 'fileManager',
-            'toolbar=no,location=no,status=no,menubar=no,' +
-            'scrollbars=yes,resizable=yes,width=800,height=400');*/
     }
 
 }

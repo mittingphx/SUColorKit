@@ -57,12 +57,25 @@ export class FileSystemFolder {
      * @returns {FileSystemFile|null}
      */
     getFile(name) {
-        for (let i = 0; i < this.files.length; i++) {
-            if (this.files[i].name === name) {
-                return this.files[i];
-            }
+        let index = this.getFileIndex(name);
+        if (index >= 0) {
+            return this.files[index];
         }
         return null;
+    }
+
+    /**
+     * Returns the index of a file by name into the files array.
+     * @param name {string} name of the file to find
+     * @returns {number} -1 if not found
+     */
+    getFileIndex(name) {
+        for (let i = 0; i < this.files.length; i++) {
+            if (this.files[i].name === name) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     /**
@@ -116,6 +129,26 @@ export class FileSystemFolder {
     }
 
     /**
+     * Removes references to a file within this folder.  Does not delete the file.
+     * @param file {FileSystemFile} the file to remove from this folder
+     */
+    removeFile(file) {
+        let index = this.files.indexOf(file);
+        if (index >= 0) {
+            this.files.splice(index, 1);
+        }
+    }
+
+    /**
+     * Adds a FileSystemFile object to this folder.
+     * @param file {FileSystemFile}
+     */
+    addFileObject(file) {
+        this.files.push(file);
+        FileSystem.getInstance().addFile(this.name, file);
+    }
+
+    /**
      * Adds a file to the localStorage file system from text data.
      * @param name {string} name to store the file as
      * @param contents {string} the text contents of the file.
@@ -123,9 +156,7 @@ export class FileSystemFolder {
     addFileAsText(name, contents) {
         let file = new FileSystemFile(name);
         file.contents = contents;
-        this.files.push(file);
-
-        FileSystem.getInstance().addFile(this.name, file);
+        this.addFileObject(file);
     }
 
     /**
@@ -134,18 +165,9 @@ export class FileSystemFolder {
      * @param base64 {string} the base64 contents of the file.
      */
     addFileAsBase64(name, base64) {
-
-        console.log({
-            fn: 'addFileAsBase64',
-            name: name,
-            base64: base64
-        });
-
         let file = new FileSystemFile(name);
         file.contents = base64;
-        this.files.push(file);
-
-        FileSystem.getInstance().addFile(this, file);
+        this.addFileObject(file);
     }
 
 }

@@ -1,7 +1,7 @@
 <!--suppress CheckImageSize -->
 <html lang="en">
 <head>
-    <title>GSM Color Converter</title>
+    <title>Scott's Utility Color Kit</title>
     <link rel="stylesheet" type="text/css" href="css/GSMColorPicker.css">
 </head>
 <body>
@@ -10,19 +10,51 @@
 
     <!-- the title bar -->
     <div class="panel-header">
-        Scott's Color Converter
+        Scott's Utility Color Kit
         <div class="actions">
             <i class="fa fa-bars action-menu" aria-hidden="true"></i>
             <i class="fa fa-times-circle action-close" aria-hidden="true"></i>
         </div>
     </div>
 
+    <!-- the popup menu when you click on the action-menu icon -->
+    <select class="action-dropdown">
+        <optgroup label="Color Converter">
+            <option value="about">About</option>
+        </optgroup>
+        <optgroup label="_________________">
+            <option value="upload">Upload Files...</option>
+            <option value="backup">Backup Files...</option>
+            <option value="restore">Restore Files...</option>
+        </optgroup>
+        <optgroup label="_________________">
+            <option value="settings">Settings...</option>
+            <option value="help">Help...</option>
+        </optgroup>
+        <optgroup label="_________________">
+            <option value="exit">Exit</option>
+        </optgroup>
+    </select>
+    <style>
+        .action-menu {
+            cursor: context-menu;
+        }
+        .action-dropdown {
+            cursor: context-menu;
+            position: absolute;
+            top: 14px;
+            right: 44px;
+            width: 20px;
+            opacity: 0;  /* stay hidden but still selectable */
+        }
+    </style>
+
     <!-- the tabs -->
     <div class="panel-tabs">
+        <div class="panel-tab" id="tab-help">?</div>
         <div class="panel-tab" id="tab-about">About</div>
         <div class="panel-tab" id="tab-settings">Settings</div>
-        <!--<div class="panel-tab" id="tab-sliders" style="margin-left: 60px">Sliders</div>-->
-        <div class="panel-tab active" id="tab-gradient" style="margin-left: 70px">Gradients</div>
+        <div class="panel-tab active" id="tab-gradient" style="margin-left: 65px">Gradients</div>
         <div class="panel-tab" id="tab-list">Named Colors</div>
         <div class="panel-tab" id="tab-photos">Photos</div>
     </div>
@@ -233,42 +265,40 @@
     <!-- the settings view -->
     <div class="panel-tab-view" id="tab-settings-view">
 
-        <div class="settings-panel settings-named-colors">
-            <h1>Named Colors</h1>
+        <div class="settings-panel">
+            <h1>Color Files</h1>
             <button id="manageNamedColors">Manage</button>
-            <p class="settings-count">
-                You have <span>---</span> named colors.
-            </p>
             <p class="desc">
-                Sets of names and hex colors that appear
-                under the "Named Colors" tab under the "List" drop down.
+                The color options are stored as files in various folders
+                within this extension's virtual file system.
             </p>
+            <ul class="settings-folders">
+                <li data-folder="Named Colors">Named colors (<span></span>) - Sets of names and hex colors</li>
+                <li data-folder="Custom Palettes">Custom palettes (<span></span>) - Classic color-set images you can choose pixels from</li>
+                <li data-folder="Photos">Photos (<span></span>) - Pictures to choose pixels from</li>
+                <li data-folder="Overlay Images">Overlay images (<span></span>) - Images that can be used as an overlay on the selected color</li>
+            </ul>
         </div>
 
-        <div class="settings-panel settings-custom-palettes">
-            <h1>Custom Palettes</h1>
-            <button id="managePaletteImages">Manage</button>
-            <p class="settings-count">
-                You have <span>---</span> custom palettes.
-            </p>
-            <p class="desc">
-                Images you can choose pixels from in the
-                gradient tab under the "palette" drop down.
-            </p>
-        </div>
+        <div class="settings-panel  settings-overlay-panel">
+            <h1>Overlay Image</h1>
 
-        <div class="settings-panel settings-overlay-images">
-            <h1>Overlay Images</h1>
-            <button id="manageOverlays">Manage</button>
-            <p class="settings-count">
-                You have <span>---</span> overlay image.
-            </p>
             <img src="images/color-picker-logo.png" alt="logo" width="50" height="50"
             style="float: left; margin: 0 10px 5px 0;">
+
             <p class="desc">
                 Images that you can overlay against the
                 selected color to see if it clashes with
                 other colors.
+            </p>
+            <p style="margin-top: 5px">
+                <label for="overlayImage">Image:</label>
+                 <select id="overlayImage" style="width: 240px; margin-left: 5px;">
+                    <option value="none">Choose Overlay</option>
+                    <option value="photoshop-3">Photoshop&reg; 3.0</option>
+                    <option value="vga256">VGA 256 Color</option>
+                    <option value="win16">Windows 16 Color</option>
+                </select>
             </p>
             <div class="clear"></div>
         </div>
@@ -281,27 +311,166 @@
             <tr>
                <td><img src="images/color-picker-logo.png" alt="logo" width="100" height="100"></td>
                 <td>
-                    <h2>Scott's Color Converter</h2>
-                    <h3>v0.9.2</h3>
-                    <h4>build 20240702</h4>
+                    <h2>Scott's Utility Color Kit</h2>
                 </td>
             </tr>
         </table>
 
         <p>
-            Browser plugin for quickly choosing colors and converting
-            between rgb and hsv and hex.
-            Created by Scott Mitting in 2024 to save time at work
-            when needing to pick colors sometimes when I don't have
-            Photoshop open all day.
+            <a href="https://buymeacoffee.com/scottmitting" target="_blank">
+                <img src="https://downloads.intercomcdn.com/i/o/234105/0d29fbdf17e257cdfc2ba1ba/7103925065c5e9bd6ac7ac9efd453fd7.png"
+                     alt="Buy Me a Coffee.com" style="height:25px;"/>
+            </a>
+            &nbsp;&nbsp;
+            <a href="https://ko-fi.com/N4N2113HUS" target="_blank">
+                <img height="36" style="border:0;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3"
+                     alt="Buy Me a Coffee at ko-fi.com" />
+            </a>
+            <br>
+            <br>
+            I could really use a dollar or two.
         </p>
-        <ul>
-            <li>Pantone&reg; colors are from
-            <a href="https://github.com/Margaret2/pantone-colors">Pantone Color Palette</a> by Margaret</li>
-            <li>Web colors are from <a href="https://www.w3schools.com/colors/colors_names.asp">w3schools.com</a></li>
-            <li>Classic computer and console colors are from <a href="https://wikipedia.org/">wikipedia.org</a></li>
-            <li>Public domain photos provided by <a href="https://unsplash.com/">Unsplash</a></li>
-        </ul>
+        <br>
+        <p>
+            v0.9.3 (build 240728) by Scott Mitting in 2024
+        </p>
+    </div>
+
+    <!-- help documentation -->
+
+    <div class="panel-tab-view" id="tab-help-view">
+
+        <h2>
+            Help <span></span>
+            <a class="btn" href="#home"><i class="fa fa-home"></i> Home</a>
+        </h2>
+
+        <div class="help-text">
+            <a id="home" title="Introduction"></a>
+
+            <h4>Introduction</h4>
+            This is a color utility originally created to convert between RGB
+            and HSV values that has expanded into a tool for selecting
+            colors from a variety of sources.
+
+            It was created by Scott Mitting in 2024 to save time at work when
+            needing to pick colors sometimes when I don't have
+            Photoshop available.
+
+            <h4>Reporting Bugs</h4>
+            Bugs can be reported on GitHub on the
+            <a href="https://github.com/users/mittingphx/projects/1" target="_blank">Bug Tracker</a>.
+
+
+
+            <h4>Platforms</h4>
+            Scott's Utility Color Kit is available in the following forms:
+            <ul>
+                <li>Google Chrome Extension</li>
+                <li>App for HeyPuter [puter.com] - Coming soon!</li>
+            </ul>
+
+
+            <br>
+            <br>
+            <a id="links" title="Links"></a>
+            <h4>Useful Links</h4>
+            <a href="https://github.com" target="_blank">Install or Update Chrome Extension</a>
+            <br>
+            <br>
+            <a href="https://github.com" target="_blank">Download Source Code</a>
+            <br>
+            <br>
+            <a href="https://github.com/users/mittingphx/projects/1" target="_blank">Report Bugs</a>
+
+            <br><br>
+
+            <a id="credits" title="Credits"></a>
+
+            <h4>Credits</h4>
+            <ul>
+                <li>Pantone&reg; colors are from
+                    <a href="https://github.com/Margaret2/pantone-colors">Pantone Color Palette</a> by Margaret</li>
+                <li>Web colors are from <a href="https://www.w3schools.com/colors/colors_names.asp">w3schools.com</a></li>
+                <li>Classic computer and console colors are from <a href="https://wikipedia.org/">wikipedia.org</a></li>
+                <li>Public domain photos provided by <a href="https://unsplash.com/">Unsplash</a></li>
+            </ul>
+
+            <a id="upcoming-features" title="Upcoming Features"></a>
+
+            <h4>Upcoming Features</h4>
+            <p>
+                This section lists the features that will be added in the future.
+                They were originally intended to be added to the initial release,
+                but if they are still listed here they either didn't get finished
+                in time or this documentation needs updated.
+            </p>
+            <ul>
+                <li>
+                    <em>Import/Export</em>
+                    Allowing users to copy sets of files into and out of the virtual
+                    file system, so they can make backups of their settings, and
+                    share images and palettes with their friends and colleagues.
+                </li>
+                <li>
+                    <em>Palette History / Saved Colors</em>
+                    The ability to have a list of colors that have been recently
+                    selected within the tool, and to save them to use later.
+                </li>
+                <li>
+                    <em>Drag to Select</em>
+                    The ability to select multiple colors by dragging the mouse
+                    across the image, sorting the colors by the most common colors,
+                    and grouping colors together than are equal within a tolerance level.
+                </li>
+                <li>
+                    <em>Grab Pixel from Web Page</em>
+                    The user will be able to use an eyedropper tool to grab colors
+                    off of the currently visible webpage.
+                </li>
+                <li>
+                    <em>Multi-Color and Palette Management</em>
+                    Allowing for multiple colors to be placed into a set, with tools
+                    to help choose new colors that fit the colors in the palette so far.
+                </li>
+                <li>
+                    <em>External Tool Integration</em>
+                    For example, I would like users to be able to search and import
+                    palettes from websites such as https://lospec.com/palette-list in
+                    a way that makes sure those sources get credit for the results.
+                </li>
+            </ul>
+
+
+            <br><br><br>
+            <a id="usage" title="Usage"></a>
+            <h4>Usage</h4>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam blandit, quam non molestie dapibus, sem mi pulvinar est, et molestie purus tortor non est. Vivamus tempor hendrerit augue, vel molestie sem dignissim id. Quisque interdum fermentum mi, vel suscipit enim sagittis eget. Nullam varius lectus enim, dapibus pretium lacus eleifend ac. Vivamus dui purus, fermentum eleifend erat posuere, egestas tempor tellus. Vivamus tincidunt auctor justo eget cursus. Ut pulvinar dui dolor, nec vulputate sapien suscipit a. Proin aliquet ultrices nisi, eget mollis nisl. Quisque vulputate dui sit amet nisi porttitor placerat. Suspendisse nulla nunc, egestas et interdum mollis, luctus eu ante. Vestibulum mattis erat ut lacus sagittis faucibus. Duis pretium nunc sapien, id scelerisque felis viverra a. Cras vehicula nibh ut elit tristique mattis. Donec euismod tellus nulla, in semper dolor sollicitudin non. Fusce ac fringilla ligula, ac hendrerit turpis. Proin pharetra rutrum quam, in scelerisque quam placerat quis.
+
+            <br><br><br>
+            <a id="usage-gradients" title="Usage - Gradients"></a>
+            <h4>Usage - Gradients</h4>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam blandit, quam non molestie dapibus, sem mi pulvinar est, et molestie purus tortor non est. Vivamus tempor hendrerit augue, vel molestie sem dignissim id. Quisque interdum fermentum mi, vel suscipit enim sagittis eget. Nullam varius lectus enim, dapibus pretium lacus eleifend ac. Vivamus dui purus, fermentum eleifend erat posuere, egestas tempor tellus. Vivamus tincidunt auctor justo eget cursus. Ut pulvinar dui dolor, nec vulputate sapien suscipit a. Proin aliquet ultrices nisi, eget mollis nisl. Quisque vulputate dui sit amet nisi porttitor placerat. Suspendisse nulla nunc, egestas et interdum mollis, luctus eu ante. Vestibulum mattis erat ut lacus sagittis faucibus. Duis pretium nunc sapien, id scelerisque felis viverra a. Cras vehicula nibh ut elit tristique mattis. Donec euismod tellus nulla, in semper dolor sollicitudin non. Fusce ac fringilla ligula, ac hendrerit turpis. Proin pharetra rutrum quam, in scelerisque quam placerat quis.
+
+            <br><br><br>
+            <a id="usage-named-colors" title="Usage - Named Colors"></a>
+            <h4>Usage - Named Colors</h4>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam blandit, quam non molestie dapibus, sem mi pulvinar est, et molestie purus tortor non est. Vivamus tempor hendrerit augue, vel molestie sem dignissim id. Quisque interdum fermentum mi, vel suscipit enim sagittis eget. Nullam varius lectus enim, dapibus pretium lacus eleifend ac. Vivamus dui purus, fermentum eleifend erat posuere, egestas tempor tellus. Vivamus tincidunt auctor justo eget cursus. Ut pulvinar dui dolor, nec vulputate sapien suscipit a. Proin aliquet ultrices nisi, eget mollis nisl. Quisque vulputate dui sit amet nisi porttitor placerat. Suspendisse nulla nunc, egestas et interdum mollis, luctus eu ante. Vestibulum mattis erat ut lacus sagittis faucibus. Duis pretium nunc sapien, id scelerisque felis viverra a. Cras vehicula nibh ut elit tristique mattis. Donec euismod tellus nulla, in semper dolor sollicitudin non. Fusce ac fringilla ligula, ac hendrerit turpis. Proin pharetra rutrum quam, in scelerisque quam placerat quis.
+
+            <br><br><br>
+            <a id="usage-photos" title="Usage - Photos"></a>
+            <h4>Usage - Photos</h4>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam blandit, quam non molestie dapibus, sem mi pulvinar est, et molestie purus tortor non est. Vivamus tempor hendrerit augue, vel molestie sem dignissim id. Quisque interdum fermentum mi, vel suscipit enim sagittis eget. Nullam varius lectus enim, dapibus pretium lacus eleifend ac. Vivamus dui purus, fermentum eleifend erat posuere, egestas tempor tellus. Vivamus tincidunt auctor justo eget cursus. Ut pulvinar dui dolor, nec vulputate sapien suscipit a. Proin aliquet ultrices nisi, eget mollis nisl. Quisque vulputate dui sit amet nisi porttitor placerat. Suspendisse nulla nunc, egestas et interdum mollis, luctus eu ante. Vestibulum mattis erat ut lacus sagittis faucibus. Duis pretium nunc sapien, id scelerisque felis viverra a. Cras vehicula nibh ut elit tristique mattis. Donec euismod tellus nulla, in semper dolor sollicitudin non. Fusce ac fringilla ligula, ac hendrerit turpis. Proin pharetra rutrum quam, in scelerisque quam placerat quis.
+
+
+
+            <br><br><br>
+            <a id="history" title="Documentation History"></a>
+            <h4>Documentation History</h4>
+
+            Originally created on July 14, 2024.
+
+        </div>
     </div>
 </div>
 
