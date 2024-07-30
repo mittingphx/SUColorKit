@@ -32,10 +32,10 @@ I could really use a dollar or two.
 
 ### Screenshots
 
-<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-1.png">
-<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-2.png">
-<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-3.png">
-<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-4.png">
+<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-1.png" alt="Screenshot 1">
+<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-2.png" alt="Screenshot 2">
+<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-3.png" alt="Screenshot 3">
+<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-4.png" alt="Screenshot 4">
 
 
 
