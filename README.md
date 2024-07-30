@@ -30,6 +30,13 @@ I could really use a dollar or two.
 
 <br><br>
 
+### Screenshots
+
+<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-1.png">
+<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-2.png">
+<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-3.png">
+<img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-4.png">
+
 
 
 ### Future Features
