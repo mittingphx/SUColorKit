@@ -184,7 +184,7 @@ export class FileSystemView {
      */
     refresh(forceReload = false) {
 
-        console.log('refresh forceReload:' + forceReload);
+        //console.log('refresh forceReload:' + forceReload);
 
         // force folder data reload
         if (forceReload) {
@@ -455,7 +455,7 @@ export class FileSystemView {
      */
     #buildFiles() {
 
-        console.log('--- buildFiles ---');
+        //console.log('--- buildFiles ---');
 
         let $ul = document.createElement('ul');
 
@@ -503,6 +503,53 @@ export class FileSystemView {
     }
 
     /**
+     * Inserts help text when the file preview usually is when a folder
+     * is selected by a file is not.
+     */
+    #fillEmptyMessage() {
+        let $empty = document.querySelector('.empty-message');
+        if (this.#selectedFolder) {
+            if (this.#selectedFolder.name === 'Named Colors') {
+                $empty.innerHTML = `
+                       <b>Named Colors</b> - 
+                       This folder contains json files defining sets of colors to be
+                       used under the Named Colors tab.  The json file should contain
+                       and array of objects with the properties 'name' and 'color'.
+                       `;
+            }
+            else if (this.#selectedFolder.name === 'Custom Palettes') {
+                $empty.innerHTML = `
+                       <b>Custom Palettes</b> - 
+                       This folder contains image files that can be used as palettes
+                       in the Gradients tab in addition to the HSV/RGB gradient palettes.
+                        `;
+            }
+            else if (this.#selectedFolder.name === 'Photos') {
+                $empty.innerHTML = `
+                       <b>Photos</b> - 
+                       This folder contains image files that can be displayed in the
+                       Photos tab, where an eyedropper tool can be used to grab pixels
+                       from each photo.
+                       `;
+            }
+            else if (this.#selectedFolder.name === 'Overlay Images') {
+                $empty.innerHTML = `
+                       <b>Overlay Images</b> - 
+                       This folder contains image files that can be used as an overlay
+                       image on top of the selected color preview to provide a comparison
+                       while the color is selected.
+                       `;
+            }
+            else {
+                $empty.innerHTML = '<br>No help available for folder ' + this.#selectedFolder.name;
+            }
+        }
+        else {
+            $empty.innerHTML += '<br>No folder selected';
+        }
+    }
+
+    /**
      * Builds the file contents view tab.
      */
     #buildFile() {
@@ -511,10 +558,12 @@ export class FileSystemView {
         let currentFile = this.#selectedFile;
         if (currentFile === null) {
             this.$fileView.classList.add('file-view-empty');
+            this.#fillEmptyMessage();
             return;
         }
         this.$fileView.classList.remove('file-view-empty');
         this.$txtFilename.value = currentFile.name;
+        let mimeType = currentFile.getMimeType();
 
         // mark system files as readonly
         if (currentFile.isUserFile() === false) {
@@ -565,21 +614,15 @@ export class FileSystemView {
 
         // show the contents if already loaded
         if (currentFile.loaded) {
-            this.$fileViewContents.innerHTML = currentFile.contents;
+            this.#fillViewContents(currentFile, mimeType);
             return;
         }
 
         // load the contents
         this.$fileViewContents.innerHTML += 'Loading...';
-        let mimeType = currentFile.getMimeType();
         if (currentFile.isUserFile()) {
             // load from localStorage
-            if (mimeType.startsWith('image/')) {
-                this.$fileViewContents.innerHTML = '<img alt="" src="' + currentFile.contents + '">';
-            }
-            else {
-                this.$fileViewContents.innerHTML = currentFile.contents;
-            }
+            this.#fillViewContents(currentFile, mimeType);
         }
         else {
             // load from extension codebase
@@ -590,9 +633,26 @@ export class FileSystemView {
                 fetch(currentFile.localUrl).then(response => response.text()).then(contents => {
                     currentFile.contents = contents;
                     currentFile.loaded = true;
-                    this.$fileViewContents.innerHTML = currentFile.contents;
+                    this.#fillViewContents(currentFile, mimeType);
                 });
             }
+        }
+    }
+
+    /**
+     * Fills the file preview with the given contents.
+     * @param currentFile {FileSystemFile} the file data
+     * @param mimeType {string} the file mime type
+     */
+    #fillViewContents(currentFile, mimeType) {
+        if (mimeType.startsWith('image/')) {
+            this.$fileViewContents.innerHTML = '<img alt="" src="' + currentFile.contents + '">';
+        }
+        else if (mimeType === 'application/json') {
+            this.$fileViewContents.innerHTML = '<pre>' + JSON.stringify(JSON.parse(currentFile.contents), null, 2) + '</pre>';
+        }
+        else {
+            this.$fileViewContents.innerHTML = currentFile.contents;
         }
     }
 }
