@@ -32,9 +32,23 @@ I could really use a dollar or two.
 
 ### Screenshots
 
+First screenshot shows off the photo color selector, allowing moving and zooming an image and clicking to select colors.
+
 <img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-1.png" alt="Screenshot 1">
+
+This screenshot shows a combine gradient selector and slider control view for picking a color.
+In addition to traditional Sat/Val/Hue selection, classic palettes such as Nintendo or VGA-256 Colors are available. 
+
 <img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-2.png" alt="Screenshot 2">
+
+The next screenshots shows the lists of named colors you can choose from, which includes
+industry standards such as Web-Safe Colors and Pantone, but also retro
+video game and computer palettes such as early Macintosh and Windows 3.x.
+
 <img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-3.png" alt="Screenshot 3">
+
+The last screenshot shows the about screen from version v0.9.3 beta.
+
 <img src="https://github.com/mittingphx/SUColorKit/blob/main/assets/screenshots/ColorKit-Screenshot-4.png" alt="Screenshot 4">
 
 
