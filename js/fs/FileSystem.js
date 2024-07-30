@@ -264,6 +264,10 @@ export class FileSystem {
         let serialized = JSON.stringify(fileData);
         console.log('saving', {fileData:fileData, serialized:serialized});
         localStorage.setItem('file_' + file.id, serialized);
+
+        // rewrite the file system's metadata and reload
+        this.#saveMetaData();
+        this.reload();
     }
 
     /**
@@ -280,6 +284,8 @@ export class FileSystem {
 
         //alert('Deleted file #' + file.id + ' named ' + file.name);
 
+        // rewrite the file system's metadata and reload
+        this.#saveMetaData();
         this.reload();
     }
 
