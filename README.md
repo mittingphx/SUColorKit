@@ -30,6 +30,15 @@ I could really use a dollar or two.
 
 <br><br>
 
+### Installation
+
+This extension is currently under review to be placed in the Google Store for Extensions.  A link to that will be placed here once the app is accepted, which will be a much simpler installation process.  Until then, tagged releases are avaiable for download and manual installation:
+
+* v0.9.3 - https://github.com/mittingphx/SUColorKit/releases/tag/v0.9.3
+
+Instructions are listed within the tags on how to side-load extensions using the "Load Unpacked" feature.
+
+
 ### Screenshots
 
 First screenshot shows off the photo color selector, allowing moving and zooming an image and clicking to select colors.
