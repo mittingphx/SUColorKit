@@ -16,6 +16,7 @@ A variety of tools are available within the extension:
 * User ability to upload files to provide their own color palettes
 * Output as hex color (and other CSS color types coming soon)
 
+This can be installed direction from the Chrome Web Store at <a href="https://chromewebstore.google.com/detail/mjanmgobclmdijifofclpknmojoaodcj">https://chromewebstore.google.com/detail/mjanmgobclmdijifofclpknmojoaodcj</a>
 
 <br><br>
 
