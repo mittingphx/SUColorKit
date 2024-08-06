@@ -33,13 +33,13 @@ I could really use a dollar or two.
 
 <br><br>
 
-### Installation
+### Manual Installation
 
-This extension is currently under review to be placed in the Google Store for Extensions.  A link to that will be placed here once the app is accepted, which will be a much simpler installation process.  Until then, tagged releases are avaiable for download and manual installation:
+The lastest versions of the software are available from this Github repository.  Tagged releases are avaiable for download and manual installation:
 
 * v0.9.3 - https://github.com/mittingphx/SUColorKit/releases/tag/v0.9.3
 
-Instructions are listed within the tags on how to side-load extensions using the "Load Unpacked" feature.
+Instructions are listed within the tags on how to side-load extensions using the "Load Unpacked" feature.  Most users will want to use the Chrome Web Store link above.
 
 
 ### Screenshots
