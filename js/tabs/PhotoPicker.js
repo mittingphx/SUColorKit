@@ -1,8 +1,11 @@
+// noinspection JSUnresolvedReference
+
 import {PixelColor} from "../util/PixelColor.js";
 import {SUColorKit} from "../SUColorKit.js";
 import {FileSystem} from "../fs/FileSystem.js";
 import {GuiUtil} from "../util/GuiUtil.js";
 import {SelectHelper} from "../util/SelectHelper.js";
+import {SettingsTab} from "./SettingsTab.js";
 
 /**
  * Displays a range of colors on a canvas from which the user can click on
@@ -66,10 +69,28 @@ export class PhotoPicker {
     showOverlayCheckbox = null;
 
     /**
+     * The panel containing the photo selector
+     * @type {HTMLDivElement|null}
+     */
+    $divChoosePanel = null;
+
+    /**
      * Dropdown for choosing the photo to display on the canvas.
      * @type {HTMLSelectElement|null}
      */
     $ddlPhoto = null;
+
+    /**
+     * The button to save the screenshot to the virtual filesystem
+     * @type {HTMLButtonElement|null}
+     */
+    $btnSaveScreenshot = null;
+
+    /**
+     * The button to open the file manager
+     * @type {HTMLButtonElement|null}
+     */
+    $btnManagePhotos = null;
 
     /**
      * The selected photo.
@@ -151,12 +172,59 @@ export class PhotoPicker {
         this.photo = photo;
         this.#loadImage(this.photo);
 
-        // update dropdown if needed
-        if (this.$ddlPhoto.value !== this.photo) {
-            this.$ddlPhoto.value = this.photo;
+        // screenshots have extra controls
+        if (this.photo.startsWith('data:')) {
+            this.$divChoosePanel.classList.add('screenshot-mode');
+        }
+        else {
+            this.$divChoosePanel.classList.remove('screenshot-mode');
         }
 
+        // show the selected value on the dropdown
+        this.#updatePhotoDropdownValue(this.photo);
+
+        // show highlighted pixel
         this.#drawSelection();
+    }
+
+    /**
+     * Updates the dropdown value if needed.
+     * @param value {string} the new value
+     */
+    #updatePhotoDropdownValue(value) {
+        let isScreenshot = value.startsWith('data:');
+        if (isScreenshot) {
+            // add the "website screenshot" option if needed
+            let found = false;
+            for (let i = 0; i < this.$ddlPhoto.options.length; i++) {
+                if (this.$ddlPhoto.options[i].value === 'Website Screenshot') {
+                    this.$ddlPhoto.selectedIndex = i;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                this.$ddlPhoto.options.add(new Option('Website Screenshot', 'Website Screenshot', true, true));
+            }
+        }
+        else {
+            // remove the "website screenshot" option
+            let removeIndex = -1;
+            for (let i = 0; i < this.$ddlPhoto.options.length; i++) {
+                if (this.$ddlPhoto.options[i].value === 'Website Screenshot') {
+                    removeIndex = i;
+                    break;
+                }
+            }
+            if (removeIndex >= 0) {
+                this.$ddlPhoto.options.remove(removeIndex);
+            }
+
+            // update selection
+            if (this.$ddlPhoto.value !== value) {
+                this.$ddlPhoto.value = value;
+            }
+        }
     }
 
     /**
@@ -202,6 +270,32 @@ export class PhotoPicker {
     }
 
     /**
+     * Takes a screenshot of the webpage in the current tab and displays
+     * it as a photo you can select colors from, with an option to save
+     * it to the virtual filesystem.
+     */
+    takeScreenshot() {
+        if (chrome && chrome.tabs) {
+            try {
+                chrome.tabs.captureVisibleTab(null, {format: 'png'}, (dataUrl) => {
+                    if (!dataUrl) {
+                        alert('Could not grab screenshot of web page.');
+                        return;
+                    }
+                    this.selectPhoto(dataUrl);
+                });
+            }
+            catch (e) {
+                console.error(e);
+                alert('Chrome is required to take a screenshot.');
+            }
+        }
+        else {
+            alert('Chrome is required to take a screenshot.');
+        }
+    }
+
+    /**
      * Initializes dom references and events.
      */
     #initDom() {
@@ -215,6 +309,9 @@ export class PhotoPicker {
             this.app.setOverlay(event.target.checked);
         });
 
+        // the options box
+        this.$divChoosePanel = document.querySelector('#tab-photos-view .panel-choose-palette');
+
         // the gradient chooser
         this.$ddlPhoto = document.querySelector('#tab-photos-view #photos-palette');
         this.$ddlPhoto.addEventListener('change', (event) => {
@@ -223,6 +320,40 @@ export class PhotoPicker {
 
         // load options from filesystem
         this.#buildPhotoDropdown();
+
+        // the save screenshot button
+        this.$btnSaveScreenshot = document.querySelector('#photos-save-screenshot');
+        this.$btnSaveScreenshot.addEventListener('click', () => {
+            let name = prompt('Enter a name for the screenshot', 'screenshot.png');
+            if (name) {
+                // save the screenshot to the filesystem's Photos folder using this name
+                let fileSystem = new FileSystem();
+                let folder = fileSystem.getFolder('Photos');
+
+                // the file data should be stored in this.photo if we're looking at a screenshot
+                let newFile = folder.addFileAsBase64(name, this.photo);
+
+                // reload the file system
+                this.#buildPhotoDropdown();
+
+                // select the new photo
+                for (let i = 0; i < this.$ddlPhoto.options.length; i++) {
+                    if (this.$ddlPhoto.options[i].value === 'file:' + newFile.id) {
+                        this.$ddlPhoto.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+            else {
+                alert('No name selected so the screenshot was not saved.');
+            }
+        });
+
+        // the manage photos button
+        this.$btnManagePhotos = document.querySelector('#photos-manage');
+        this.$btnManagePhotos.addEventListener('click', () => {
+            SettingsTab.launchFileManager('Photos');
+        });
     }
 
     /**
@@ -435,9 +566,9 @@ export class PhotoPicker {
      */
     #loadImage(imgUrl) {
         this.#imageScroll = {x: 0, y: 0};
-        if (this.photo.startsWith('file:')) {
+        if (imgUrl.startsWith('file:')) {
             // image from localStorage
-            let fileId = parseInt(this.photo.substring(5));
+            let fileId = parseInt(imgUrl.substring(5));
             FileSystem.loadFileById(fileId, (file) => {
                 if (file == null) {
                     console.error('could not load file ' + fileId);
@@ -452,6 +583,16 @@ export class PhotoPicker {
                     this.#image = img;
                 };
             });
+        /* } else if (imgUrl.startsWith('data:')) { // same code in "else" works fine
+            // image from data URL
+            const img = new Image();
+            img.src = imgUrl;
+            img.onload = () => {
+                let rect = GuiUtil.fillCentered(this.canvas, img);
+                this.#imageScroll = {x: rect.x, y: rect.y};
+                this.#imageScale = {width: rect.width, height: rect.height};
+                this.#image = img;
+            }; */
         } else {
             // image from extension's folder
             const img = new Image();

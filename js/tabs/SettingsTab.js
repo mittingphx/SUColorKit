@@ -123,7 +123,7 @@ export class SettingsTab {
         // set event listeners for buttons
         this.$btnManageNamedColors = document.querySelector('#manageNamedColors');
         this.$btnManageNamedColors.addEventListener('click', () => {
-            this.launchFileManager('Named Colors');
+            SettingsTab.launchFileManager('Named Colors');
         });
     }
 
@@ -132,7 +132,7 @@ export class SettingsTab {
      * to alter the files that define the available color settings.
      * @param folder {string|null} optional folder name
      */
-    launchFileManager(folder = null) {
+    static launchFileManager(folder = null) {
 
         // insert selection into url
         let url = './files.html';

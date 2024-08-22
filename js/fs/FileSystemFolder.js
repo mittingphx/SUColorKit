@@ -163,11 +163,13 @@ export class FileSystemFolder {
      * Adds a file to the localStorage file system from base64 data.
      * @param name {string} name to store the file as
      * @param base64 {string} the base64 contents of the file.
+     * @returns {FileSystemFile} the newly created file
      */
     addFileAsBase64(name, base64) {
         let file = new FileSystemFile(name);
         file.contents = base64;
         this.addFileObject(file);
+        return file;
     }
 
 }

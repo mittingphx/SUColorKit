@@ -280,9 +280,37 @@ body {
 }
 
 #tab-photos-view .panel-choose-palette select {
-    width: 250px;
+    width: 215px;
 }
 
+#tab-photos-view .panel-choose-palette button#photos-save-screenshot {
+    margin-left: 0;
+    display: none;
+}
+
+#tab-photos-view .panel-choose-palette button#photos-manage {
+    display: inline-block;
+    margin: auto;
+}
+
+#tab-photos-view .panel-choose-palette button:hover {
+    background-color: #bbb;
+    transition: background-color 0.4s;
+}
+
+#tab-photos-view .screenshot-mode button#photos-save-screenshot {
+    display: inline-block !important;
+}
+
+#tab-photos-view .screenshot-mode button#photos-manage {
+    display: none !important;
+}
+
+/*
+#tab-photos-view .screenshot-mode select {
+    width: 215px !important;
+}
+*/
 
 /** settings view **/
 

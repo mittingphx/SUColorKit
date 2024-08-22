@@ -22,6 +22,7 @@
     <select class="action-dropdown" id="ddlAction">
         <optgroup label="Color Converter">
             <option value="about">About</option>
+            <option value="screenshot">Webpage Screenshot</option>
         </optgroup>
         <optgroup label="_________________">
             <option value="upload">Upload Files...</option>
@@ -243,6 +244,8 @@
         <div class="panel-section panel-choose-palette panel-blur">
             <label for="photos-palette">Photo:</label>
             <select id="photos-palette"></select>
+            <button id="photos-save-screenshot" title="Save this screenshot"><i class="fa fa-save"></i></button>
+            <button id="photos-manage" title="Manage photos"><i class="fa fa-upload"></i></button>
         </div>
 
 
@@ -320,7 +323,7 @@
         </p>
         <br>
         <p>
-            v0.9.3 (build 240730) by Scott Mitting in 2024
+            v0.9.4 (build 240822) by Scott Mitting in 2024
         </p>
     </div>
 
@@ -428,7 +431,7 @@
                     and grouping colors together than are equal within a tolerance level.
                 </li>
                 <li>
-                    <em>Grab Pixel from Web Page</em>
+                    <em>Grab Pixel from Web Page (complete)</em>
                     The user will be able to use an eyedropper tool to grab colors
                     off of the currently visible webpage.
                 </li>
@@ -531,6 +534,16 @@
             <ul>
                 <li>Originally created on July 14, 2024.</li>
                 <li>Basic overview of each tab added July 29, 2024</li>
+            </ul>
+
+
+            <br><br><br>
+            <a id="history_product" title="Release History"></a>
+            <h4>Release History</h4>
+
+            <ul>
+                <li>2024/07/31 - Initial release</li>
+                <li>2024/08/22 - Screenshot support released</li>
             </ul>
         </div>
     </div>

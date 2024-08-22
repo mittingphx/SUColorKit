@@ -383,6 +383,9 @@ export class SUColorKit {
                 case 'help':
                     this.tabs.show('about');
                     break;
+                case 'screenshot':
+                    this.photoPicker.takeScreenshot();
+                    break;
                 case 'exit':
                     this.close();
                     break;
